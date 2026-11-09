@@ -236,21 +236,22 @@ const text = {
   },
 };
 
-// Answers of the reference checklist: [answer, condition (Yes only), with additional information]
+// Answers of the reference checklist: [answer, condition, with additional information]. Every question
+// of a group answers Condition/function OK?
 const checklist = [
   ['yes', false, true],
-  ['not_relevant'],
-  ['no'],
+  ['not_relevant', true],
+  ['no', false],
   ['yes', true],
-  ['not_relevant'],
-  ['no'],
-  ['not_relevant'],
-  ['no'],
-  ['not_relevant'],
-  ['no'],
-  ['not_relevant'],
+  ['not_relevant', true],
+  ['no', false],
+  ['not_relevant', true],
+  ['no', true],
+  ['not_relevant', true],
+  ['no', false],
+  ['not_relevant', true],
   ['yes', true, true],
-  ['not_relevant'],
+  ['not_relevant', true],
 ];
 
 // ---------- Tabs of the handover template -------------------------------------------------------------
@@ -312,7 +313,7 @@ function tabs(x, { compare = false } = {}) {
                 no: `1.${i + 1}`,
                 label: x.q[i],
                 answer,
-                ...(answer === 'yes' ? { condition } : {}),
+                condition,
                 ...(withInfo ? { comment: x.damage } : {}),
                 ...(i === 11 ? { photos: [ph('answer-cabin-light')] } : {}),
               },
@@ -380,7 +381,6 @@ function showcase(x) {
           { answer: 'yes', condition: true, comment: x.damage, photos: [ph('attachment-mirror-1'), ph('attachment-mirror-2')] },
         ),
         la({ type: 'yesno', label: x.fYes, answer: 'no', comment: x.damage }, { answer: 'yes', condition: false }),
-        la({ type: 'yesno', label: x.fYes, answer: 'not_relevant' }, { answer: 'not_relevant' }),
         la({ type: 'rating', label: x.fRating, value: { score: 3, max: 5 }, comment: x.damage }, { value: { score: 3, max: 5 }, comment: x.damage }),
         la({ type: 'range', label: x.fRange, value: { from: 10, to: 50 }, unit: '%' }, { value: { from: 10, to: 50 }, unit: '%' }),
         la({ type: 'description', label: x.fDesc, value: x.damage }, { value: x.damage }),
@@ -403,9 +403,9 @@ function showcase(x) {
           heading: x.heading,
           fields: [
             la({ type: 'yesno', label: x.fQuestion[0], answer: 'yes', condition: true }, { answer: 'no', comment: x.damageOld }),
-            la({ type: 'yesno', label: x.fQuestion[1], answer: 'not_relevant' }, { answer: 'not_relevant' }),
-            la({ type: 'choice', label: x.fQuestion[2], value: x.fAnswer(6) }, { value: x.fAnswer(2) }),
-            la({ type: 'yesno', label: x.fQuestion[3], answer: 'no', comment: x.damage }, null),
+            la({ type: 'yesno', label: x.fQuestion[1], answer: 'not_relevant', condition: true }, { answer: 'not_relevant' }),
+            la({ type: 'choice', label: x.fQuestion[2], value: x.fAnswer(6), condition: false }, { value: x.fAnswer(2) }),
+            la({ type: 'yesno', label: x.fQuestion[3], answer: 'no', condition: false, comment: x.damage }, null),
           ],
         },
         {

@@ -1007,16 +1007,6 @@ img {
   color: var(--ho-link);
 }
 
-.ho-rating__note {
-  margin-left: 0;
-}
-
-.ho-field--rating .ho-field__value {
-  display: block; /* the comment runs on after the score, as in the PDF */
-  max-width: 192pt;
-  font-size: 9pt;
-  line-height: 10.9pt;
-}
 
 .ho-text {
   margin-top: 0.2pt;
@@ -1232,7 +1222,9 @@ img {
   grid-template-columns: repeat(2, 172.8pt);
 }
 
+/* A gallery is not a band: no padding, its label on the photos' left edge */
 .ho-field--gallery {
+  padding: 0;
   break-inside: auto;
 }
 
@@ -1256,7 +1248,7 @@ img {
 }
 
 .ho-field--gallery > .ho-field__label {
-  margin: 0 0 4pt var(--ho-inset);
+  margin: 0 0 4pt 4.4pt; /* the photos' left edge (.ho-photos) */
   break-after: avoid;
 }
 
@@ -1285,6 +1277,15 @@ img {
   justify-content: space-between;
   padding: 1.3pt 1.2pt 0.5pt 0;
   text-decoration: none;
+}
+
+.ho-link-row > span {
+  display: block;
+}
+
+.ho-link-row .ho-link__name {
+  display: flex;
+  margin-top: 4pt; /* the link under its label, as file links elsewhere (.ho-links) */
 }
 
 /* Files inside a Last Answer: icon and name, no bar */
@@ -1325,7 +1326,7 @@ img {
 }
 
 .ho-closing .ho-dotted {
-  margin: 41pt 0 34pt;
+  margin: 30pt 0 26pt;
 }
 
 .ho-closing .ho-dotted--first {
@@ -1352,7 +1353,7 @@ img {
 .ho-signers {
   display: flex;
   flex-direction: column;
-  gap: 34pt;
+  gap: 26pt;
 }
 
 .ho-signer {
@@ -1415,7 +1416,7 @@ img {
 /* Company block */
 .ho-company {
   break-inside: avoid;
-  margin-top: 43.6pt;
+  margin-top: 32pt;
   color: var(--ho-brand);
   font-size: 6pt;
   line-height: 7.2pt;

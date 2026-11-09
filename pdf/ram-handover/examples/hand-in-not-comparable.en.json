@@ -183,8 +183,10 @@
               "no": "1.2",
               "label": "Operating instructions",
               "answer": "not_relevant",
+              "condition": true,
               "lastAnswer": {
-                "answer": "not_relevant"
+                "answer": "not_relevant",
+                "condition": true
               }
             },
             {
@@ -192,6 +194,7 @@
               "no": "1.3",
               "label": "Hazard assessment",
               "answer": "no",
+              "condition": false,
               "lastAnswer": {
                 "answer": "yes",
                 "condition": true
@@ -213,8 +216,10 @@
               "no": "1.5",
               "label": "Type plate / CE marking",
               "answer": "not_relevant",
+              "condition": true,
               "lastAnswer": {
-                "answer": "not_relevant"
+                "answer": "not_relevant",
+                "condition": true
               }
             },
             {
@@ -222,8 +227,10 @@
               "no": "1.6",
               "label": "Declaration of conformity",
               "answer": "no",
+              "condition": false,
               "lastAnswer": {
-                "answer": "no"
+                "answer": "no",
+                "condition": false
               }
             },
             {
@@ -231,8 +238,10 @@
               "no": "1.7",
               "label": "Warning signs / information plates",
               "answer": "not_relevant",
+              "condition": true,
               "lastAnswer": {
-                "answer": "not_relevant"
+                "answer": "not_relevant",
+                "condition": true
               }
             },
             {
@@ -240,8 +249,10 @@
               "no": "1.8",
               "label": "Last test certificate",
               "answer": "no",
+              "condition": true,
               "lastAnswer": {
-                "answer": "no"
+                "answer": "no",
+                "condition": true
               }
             },
             {
@@ -249,8 +260,10 @@
               "no": "1.9",
               "label": "Type plate / CE marking",
               "answer": "not_relevant",
+              "condition": true,
               "lastAnswer": {
-                "answer": "not_relevant"
+                "answer": "not_relevant",
+                "condition": true
               }
             },
             {
@@ -258,8 +271,10 @@
               "no": "1.10",
               "label": "Last test certificate",
               "answer": "no",
+              "condition": false,
               "lastAnswer": {
-                "answer": "no"
+                "answer": "no",
+                "condition": false
               }
             },
             {
@@ -267,8 +282,10 @@
               "no": "1.11",
               "label": "Type plate / CE marking",
               "answer": "not_relevant",
+              "condition": true,
               "lastAnswer": {
-                "answer": "not_relevant"
+                "answer": "not_relevant",
+                "condition": true
               }
             },
             {
@@ -299,8 +316,10 @@
               "no": "1.13",
               "label": "Type plate / CE marking",
               "answer": "not_relevant",
+              "condition": true,
               "lastAnswer": {
-                "answer": "not_relevant"
+                "answer": "not_relevant",
+                "condition": true
               }
             }
           ]

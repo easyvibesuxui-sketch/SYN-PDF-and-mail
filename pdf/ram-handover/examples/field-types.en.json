@@ -79,14 +79,6 @@
           }
         },
         {
-          "type": "yesno",
-          "label": "Hydraulic pipe problem",
-          "answer": "not_relevant",
-          "lastAnswer": {
-            "answer": "not_relevant"
-          }
-        },
-        {
           "type": "rating",
           "label": "Problem rating",
           "value": {
@@ -243,6 +235,7 @@
               "type": "yesno",
               "label": "Second question",
               "answer": "not_relevant",
+              "condition": true,
               "lastAnswer": {
                 "answer": "not_relevant"
               }
@@ -251,6 +244,7 @@
               "type": "choice",
               "label": "Third question",
               "value": "Answer 6",
+              "condition": false,
               "lastAnswer": {
                 "value": "Answer 2"
               }
@@ -259,6 +253,7 @@
               "type": "yesno",
               "label": "Fourth question",
               "answer": "no",
+              "condition": false,
               "comment": "The damage always indicates the failure or impairment of a machine or technical system. Machine damage can take many forms and often has a significant impact on efficiency.",
               "lastAnswer": null
             }

@@ -79,14 +79,6 @@
           }
         },
         {
-          "type": "yesno",
-          "label": "Problem an der Hydraulikleitung",
-          "answer": "not_relevant",
-          "lastAnswer": {
-            "answer": "not_relevant"
-          }
-        },
-        {
           "type": "rating",
           "label": "Bewertung des Problems",
           "value": {
@@ -243,6 +235,7 @@
               "type": "yesno",
               "label": "Zweite Frage",
               "answer": "not_relevant",
+              "condition": true,
               "lastAnswer": {
                 "answer": "not_relevant"
               }
@@ -251,6 +244,7 @@
               "type": "choice",
               "label": "Dritte Frage",
               "value": "Antwort 6",
+              "condition": false,
               "lastAnswer": {
                 "value": "Antwort 2"
               }
@@ -259,6 +253,7 @@
               "type": "yesno",
               "label": "Vierte Frage",
               "answer": "no",
+              "condition": false,
               "comment": "Ein Schaden bedeutet immer den Ausfall oder die Beeinträchtigung einer Maschine oder technischen Anlage. Maschinenschäden haben viele Formen und wirken sich oft stark auf die Effizienz aus.",
               "lastAnswer": null
             }

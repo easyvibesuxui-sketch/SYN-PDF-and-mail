@@ -125,13 +125,15 @@
               "type": "yesno",
               "no": "1.2",
               "label": "Betriebsanleitung",
-              "answer": "not_relevant"
+              "answer": "not_relevant",
+              "condition": true
             },
             {
               "type": "yesno",
               "no": "1.3",
               "label": "Gefährdungsbeurteilung",
-              "answer": "no"
+              "answer": "no",
+              "condition": false
             },
             {
               "type": "yesno",
@@ -144,43 +146,50 @@
               "type": "yesno",
               "no": "1.5",
               "label": "Typenschild / CE-Kennzeichnung",
-              "answer": "not_relevant"
+              "answer": "not_relevant",
+              "condition": true
             },
             {
               "type": "yesno",
               "no": "1.6",
               "label": "Konformitätserklärung",
-              "answer": "no"
+              "answer": "no",
+              "condition": false
             },
             {
               "type": "yesno",
               "no": "1.7",
               "label": "Warn- und Hinweisschilder",
-              "answer": "not_relevant"
+              "answer": "not_relevant",
+              "condition": true
             },
             {
               "type": "yesno",
               "no": "1.8",
               "label": "Letzte Prüfbescheinigung",
-              "answer": "no"
+              "answer": "no",
+              "condition": true
             },
             {
               "type": "yesno",
               "no": "1.9",
               "label": "Typenschild / CE-Kennzeichnung",
-              "answer": "not_relevant"
+              "answer": "not_relevant",
+              "condition": true
             },
             {
               "type": "yesno",
               "no": "1.10",
               "label": "Letzte Prüfbescheinigung",
-              "answer": "no"
+              "answer": "no",
+              "condition": false
             },
             {
               "type": "yesno",
               "no": "1.11",
               "label": "Typenschild / CE-Kennzeichnung",
-              "answer": "not_relevant"
+              "answer": "not_relevant",
+              "condition": true
             },
             {
               "type": "yesno",
@@ -199,7 +208,8 @@
               "type": "yesno",
               "no": "1.13",
               "label": "Typenschild / CE-Kennzeichnung",
-              "answer": "not_relevant"
+              "answer": "not_relevant",
+              "condition": true
             }
           ]
         }

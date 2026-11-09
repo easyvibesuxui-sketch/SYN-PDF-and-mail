@@ -151,12 +151,11 @@ function lastAnswer(t, type, prev, { row = false } = {}) {
   const oneFile = (type === 'file' || type === 'video') && prev.files?.length === 1;
   const inline = INLINE.has(type) ? inlineValue(t, type, prev) : oneFile ? files(t, type, prev.files, { compact: true }) : '';
   const block = oneFile ? '' : blockValue(t, type, prev, { compact: true });
-  const ratingNote = type === 'rating' && has(prev.comment) ? `<span class="ho-rating__note">${esc(prev.comment)}</span>` : '';
-  const comment = type === 'rating' ? '' : info(t, prev.comment);
+  const comment = info(t, prev.comment);
   const thumbs = photos(prev.photos, 'ho-thumb');
   return `<div class="ho-last${row ? ' ho-last--row' : ''}${thumbs ? ' ho-last--photos' : ''}">
       <div class="ho-last__main">
-        <div class="ho-last__head">${title}${inline}${ratingNote}</div>
+        <div class="ho-last__head">${title}${inline}</div>
         ${block}${comment}
       </div>
       ${thumbs}
@@ -173,7 +172,6 @@ function fieldBand(t, f, ctx) {
   const note = has(f.note) ? ` <span class="ho-field__inline">${esc(f.note)}</span>` : '';
   const compactFile = (f.type === 'file' || f.type === 'video') && f.files?.length === 1 && !has(f.note);
   const inline = INLINE.has(f.type) ? inlineValue(t, f.type, f) : '';
-  const ratingNote = f.type === 'rating' && has(f.comment) ? `<span class="ho-rating__note">${esc(f.comment)}</span>` : '';
 
   let body;
   if (compactFile) {
@@ -183,12 +181,12 @@ function fieldBand(t, f, ctx) {
     body = `<a class="ho-link-row" href="${esc(file.url ?? '#')}"><span><span class="ho-label ho-block">${esc(f.label)}${typeTag(ctx, f.type)}</span><span class="ho-link__name">${fileIcon}<span class="ho-link-text">${esc(file.name)}</span></span></span>${icon.next}</a>`;
   } else {
     body = `<div class="ho-field__label ho-label${ic ? ' ho-field__label--icon' : ''}">${esc(f.label)}${typeTag(ctx, f.type)}${ic}${note}</div>
-        ${inline || ratingNote ? `<div class="ho-field__value ho-value">${inline}${ratingNote}</div>` : ''}
+        ${inline ? `<div class="ho-field__value ho-value">${inline}</div>` : ''}
         ${blockValue(t, f.type, f)}`;
   }
 
   const big = f.type === 'image' || has(f.photos) ? photos(f.photos) : '';
-  const comment = f.type === 'rating' ? '' : info(t, f.comment);
+  const comment = info(t, f.comment);
   const last = ctx.compare ? lastAnswer(t, f.type, f.lastAnswer ?? null) : '';
 
   return `<div class="ho-field ho-field--${esc(f.type)}${big ? ' ho-field--with-photos' : ''}">
@@ -238,8 +236,9 @@ function group(t, f, ctx) {
       const complete = isYesNo
         ? yesnoHtml(t, q, { withCondition: false })
         : inlineValue(t, type, q) || blockValue(t, type, q, { compact: true });
+      // Every question of a group answers Condition/function OK?
       const condition =
-        isYesNo && q.answer === 'yes' && typeof q.condition === 'boolean'
+        typeof q.condition === 'boolean'
           ? q.condition
             ? `<span class="ho-yes">${esc(t('yes'))}</span>`
             : `<span class="ho-no">${esc(t('no'))}</span>`
