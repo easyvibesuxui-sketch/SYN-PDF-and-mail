@@ -166,6 +166,10 @@ page number, and a table header that repeats on every page; wkhtmltopdf does not
   Pro). Montserrat runs wider than Myriad, so a few lines wrap differently.
 - The logo is the syniotec wordmark taken from the PDFs as vector (`assets/syniotec-logo.svg`).
 - With compare on, the closing page's spacing tightens so signatures and company details stay on one page.
+- Page breaks: a tab title never stays alone at the bottom of a page; it moves to the next page with the
+  start of its content. Field bands, questions and rows of photos are not split; a gallery breaks between
+  rows. This needs the tab body in block flow (`.ho-tab` is `flow-root`, not flex): Chromium keeps a
+  heading with what follows only there.
 
 ### ABC Favorit
 
@@ -212,4 +216,5 @@ reports laid out as A4 pages with paged.js, fonts and photos inlined, to publish
 review by comment. Only the running header and footer are adapted to paged.js; the layout is the print
 stylesheet. Each field's label is followed by its template type in grey, "Warehouse (Input)"
 (`renderHandover(data, { showFieldTypes: true })`); real reports leave it out. Page breaks can fall slightly differently from Chromium's print (the Bulk example takes one page
-more there); the PDFs in `examples/` are the reference.
+more there); the PDFs in `examples/` are the reference. paged.js ignores `break-after: avoid`, so the review
+page keeps titles with their content by giving them room below as unbreakable padding.

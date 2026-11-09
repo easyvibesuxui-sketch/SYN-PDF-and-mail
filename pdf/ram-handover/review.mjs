@@ -50,6 +50,12 @@ css += `
 .pagedjs_margin-bottom-left > .pagedjs_margin-content { white-space: pre; align-self: start; }
 .pagedjs_margin-bottom-right > .pagedjs_margin-content { align-self: start; }
 .pagedjs_margin-bottom-right { border-top: 0.25pt solid #f1f1f1; margin: 13.3pt 28.35pt 0 auto; width: 112pt; box-sizing: border-box; }
+/* paged.js ignores break-after: avoid. A heading carries the room its content needs to start as
+   unbreakable bottom padding and gives it back with a negative margin, so it moves to the next page
+   with its content instead of staying alone at the bottom. */
+.ho-section > .ho-section-title { break-inside: avoid; padding-bottom: 200pt; margin-bottom: calc(9.6pt - 200pt); }
+.ho-subtitle { break-inside: avoid; padding-bottom: 120pt; margin-bottom: calc(6.6pt - 120pt); }
+.ho-closing .ho-section > .ho-section-title { padding-bottom: 0; margin-bottom: 12.1pt; }
 `;
 
 const docs = [

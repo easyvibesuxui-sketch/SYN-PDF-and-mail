@@ -203,7 +203,8 @@ function gallery(t, f, ctx) {
   if (!items.length) return '';
   return `<div class="ho-field ho-field--gallery ho-field--${esc(f.type)}">
       ${has(f.label) || ctx.showTypes ? `<div class="ho-field__label ho-label">${esc(f.label ?? '')}${typeTag(ctx, f.type)}</div>` : ''}
-      <div class="ho-photos${f.type === 'ai' ? ' ho-photos--two' : ''}">${items
+      <div class="ho-photos${f.type === 'ai' ? ' ho-photos--two' : ''}">${rowsOf(items, f.type === 'ai' ? 2 : 3)
+        .map((row) => `<div class="ho-photos__row">${row
         .map(
           (p) => `<figure>
           <figcaption class="ho-label">${esc(p.label)}</figcaption>
@@ -215,8 +216,16 @@ function gallery(t, f, ctx) {
           }
         </figure>`,
         )
+        .join('')}</div>`)
         .join('')}</div>
     </div>`;
+}
+
+// Photos in rows, so a gallery can break between rows and starts right under its title.
+function rowsOf(list, n) {
+  const rows = [];
+  for (let i = 0; i < list.length; i += n) rows.push(list.slice(i, i + n));
+  return rows;
 }
 
 // Group: the checklist (question / Complete / Condition OK?), each question with its Last Answer.

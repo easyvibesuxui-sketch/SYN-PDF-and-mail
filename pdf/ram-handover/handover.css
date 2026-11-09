@@ -1098,8 +1098,8 @@ img {
   flex: none;
   font-family: var(--syn-font-title);
   font-weight: 500;
-  font-size: 6pt;
-  line-height: 8pt;
+  font-size: var(--ho-last-answer); /* the same size as the answer beside it */
+  line-height: 9pt;
   color: var(--ho-ink);
 }
 
@@ -1203,16 +1203,22 @@ img {
 /* ---------- Photos ---------------------------------------------------------------------------------- */
 
 .ho-photos {
+  display: flex;
+  flex-direction: column;
+  gap: 7.7pt;
+  margin-left: 4.4pt;
+}
+
+/* One row of photos; a grid does not break across pages, rows of it do */
+.ho-photos__row {
   display: grid;
   grid-template-columns: repeat(3, 172.8pt);
   column-gap: 8.3pt;
-  row-gap: 7.7pt;
-  margin-left: 4.4pt;
+  break-inside: avoid;
 }
 
 .ho-photos figure {
   margin: 0;
-  break-inside: avoid;
 }
 
 .ho-photos figcaption {
@@ -1224,7 +1230,7 @@ img {
   height: 129.9pt;
 }
 
-.ho-photos--two {
+.ho-photos--two .ho-photos__row {
   grid-template-columns: repeat(2, 172.8pt);
 }
 
@@ -1232,11 +1238,19 @@ img {
   break-inside: auto;
 }
 
-/* A tab's blocks (field lists, groups, galleries), 14pt apart */
+/* A tab's blocks (field lists, groups, galleries), 14pt apart. Block flow, not flex: Chromium keeps a
+   heading with what follows (break-after: avoid) only through block flow. flow-root keeps the first
+   block's margin inside the tab. */
 .ho-tab {
-  display: flex;
-  flex-direction: column;
-  gap: 14pt;
+  display: flow-root;
+}
+
+.ho-tab > * {
+  margin-top: 14pt;
+}
+
+.ho-tab > :first-child {
+  margin-top: 0;
 }
 
 .ho-tab > .ho-group:first-child {
