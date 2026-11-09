@@ -90,6 +90,12 @@
   --ho-inset: 6pt; /* fields start 6pt inside their band */
   --ho-radius: var(--syn-radius-xs); /* every band, card, photo and link: 2px */
   --ho-icon-gap: 4px; /* between an icon and its text, everywhere */
+  /* Last Answer: one size for each part, in every field type */
+  --ho-last-img-w: 64pt;
+  --ho-last-img-h: 48pt;
+  --ho-last-answer: 7.5pt; /* the main answer */
+  --ho-last-sub: 7pt; /* the secondary answer (Condition) */
+  --ho-last-text: 7pt; /* additional information */
 }
 
 /* ---------- Pages ---------------------------------------------------------------------------------- */
@@ -939,7 +945,7 @@ img {
   gap: var(--ho-icon-gap);
 }
 
-.ho-yesno .ho-k {
+.ho-yesno .ho-sub {
   margin-left: 8pt;
 }
 
@@ -1037,12 +1043,12 @@ img {
    on the right. */
 .ho-last {
   margin-top: 4pt;
-  padding: 3pt var(--ho-inset);
+  padding: 4pt var(--ho-inset);
   border: 0.5pt solid var(--ho-muted);
   border-radius: var(--ho-radius);
   background: var(--syn-color-white-white);
-  font-size: 7pt;
-  line-height: 8.6pt;
+  font-size: var(--ho-last-answer);
+  line-height: 9pt;
   font-weight: 500;
   break-inside: avoid;
 }
@@ -1084,8 +1090,12 @@ img {
 .ho-last .ho-text,
 .ho-last .ho-checks,
 .ho-last .ho-link-text {
-  font-size: 7pt;
-  line-height: 8.6pt;
+  font-size: var(--ho-last-answer);
+  line-height: 9pt;
+}
+
+.ho-last .ho-sub {
+  font-size: var(--ho-last-sub);
 }
 
 .ho-last__main > .ho-text,
@@ -1097,21 +1107,22 @@ img {
 .ho-last .ho-info {
   margin: 2pt 0 0;
   padding-right: 0;
-  font-size: 6.5pt;
-  line-height: 8.4pt;
+  font-size: var(--ho-last-text);
+  line-height: 9pt;
+  font-weight: 400;
 }
 
 .ho-thumbs {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 3pt;
-  max-width: 120pt;
+  gap: 4pt;
+  max-width: calc(var(--ho-last-img-w) * 2 + 4pt);
 }
 
 .ho-thumb {
-  width: 36pt;
-  height: 27pt;
+  width: var(--ho-last-img-w);
+  height: var(--ho-last-img-h);
   object-fit: cover;
   border-radius: var(--ho-radius);
   background: var(--ho-fill);
@@ -1120,8 +1131,6 @@ img {
 /* In the checklist: 6pt text, lined up with "Additional information" */
 .ho-last--row {
   margin: 5pt 0 0;
-  font-size: 7pt;
-  line-height: 8.6pt;
 }
 
 .ho-last--row .ho-status {
@@ -1137,8 +1146,7 @@ img {
 
 /* Under a gallery photo: thumbnail only */
 .ho-photos .ho-last {
-  margin-top: 3pt;
-  padding: 3pt 5pt;
+  margin-top: 4pt;
 }
 
 .ho-photos .ho-last--photos {
@@ -1195,7 +1203,7 @@ img {
 }
 
 .ho-photos figcaption {
-  margin: 0 0 -1.6pt 3.4pt;
+  margin: 0 0 4pt; /* caption 4pt above its photo, on its left edge */
 }
 
 .ho-photos .ho-photo {

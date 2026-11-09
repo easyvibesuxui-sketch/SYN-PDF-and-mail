@@ -58,7 +58,7 @@ function yesnoHtml(t, v, { withCondition = true } = {}) {
   // Condition is asked only after a Yes
   const condition =
     withCondition && v.answer === 'yes' && typeof v.condition === 'boolean'
-      ? `<span class="ho-k">${esc(t('condition'))}</span><span>${esc(t(v.condition ? 'okay' : 'notOkay'))}</span>`
+      ? `<span class="ho-sub"><span class="ho-k">${esc(t('condition'))}</span><span>${esc(t(v.condition ? 'okay' : 'notOkay'))}</span></span>`
       : '';
   return `<span class="ho-yesno">${ic}${text}${condition}</span>`;
 }
