@@ -43,13 +43,13 @@ css += `
   }
   @bottom-right {
     content: counter(page); vertical-align: top; text-align: right;
-    padding: 14pt 28.35pt 0 0;
+    padding: 2.6pt 0 0 0;
     font-family: 'Montserrat', Arial, sans-serif; font-size: 7pt; color: #a7b0b3;
   }
 }
 .pagedjs_margin-bottom-left > .pagedjs_margin-content { white-space: pre; align-self: start; }
 .pagedjs_margin-bottom-right > .pagedjs_margin-content { align-self: start; }
-.pagedjs_margin-bottom-right { border-top: 0.25pt solid #f1f1f1; margin-top: 13.3pt; }
+.pagedjs_margin-bottom-right { border-top: 0.25pt solid #f1f1f1; margin: 13.3pt 28.35pt 0 auto; width: 112pt; box-sizing: border-box; }
 `;
 
 const docs = [

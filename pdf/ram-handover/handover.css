@@ -14,21 +14,34 @@
 /* ---------- Fonts ---------------------------------------------------------------------------------- */
 
 /* ABC Favorit Expanded, Syn's title face (licensed, self-hosted in fonts/). Expanded has no Bold, so bold
-   titles use ABC Favorit Extended Bold, as the InDesign PDFs do. */
+   titles use ABC Favorit Extended Bold, as the InDesign PDFs do.
+   The face sits high in its line box: its metrics (ascent 950, descent 390) centre the box 0.28em above the
+   baseline, its capitals centre at 0.35em, so text reads 0.07em high (1px at 14px, the "1px" Syn corrects
+   with --syn-title-offset). Moving 70 units from descent to ascent (102% / 32%) draws every glyph 0.07em
+   lower at every size and keeps the line box the same height, so layout does not move. */
 @font-face {
   font-family: 'ABC Favorit Expanded';
   font-weight: 400;
   src: url('fonts/ABCFavoritExpanded-Regular.woff2') format('woff2');
+  ascent-override: 102%;
+  descent-override: 32%;
+  line-gap-override: 0%;
 }
 @font-face {
   font-family: 'ABC Favorit Expanded';
   font-weight: 500;
   src: url('fonts/ABCFavoritExpanded-Medium.woff2') format('woff2');
+  ascent-override: 102%;
+  descent-override: 32%;
+  line-gap-override: 0%;
 }
 @font-face {
   font-family: 'ABC Favorit Expanded';
   font-weight: 700;
   src: url('fonts/ABCFavoritExtended-Bold.woff2') format('woff2');
+  ascent-override: 102%;
+  descent-override: 32%;
+  line-gap-override: 0%;
 }
 
 /* Montserrat (OFL), self-hosted: latin + latin-ext covers German. */
@@ -76,6 +89,7 @@
   --ho-margin-x: 28.35pt; /* 10 mm */
   --ho-inset: 6pt; /* fields start 6pt inside their band */
   --ho-radius: var(--syn-radius-xs); /* every band, card, photo and link: 2px */
+  --ho-icon-gap: 4px; /* between an icon and its text, everywhere */
 }
 
 /* ---------- Pages ---------------------------------------------------------------------------------- */
@@ -109,9 +123,9 @@
     content: counter(page);
     vertical-align: top;
     text-align: right;
-    width: 140.8pt;
-    margin: 13.3pt 5.3pt 0 0;
-    padding: 2.6pt 23.1pt 0 0;
+    width: 112pt;
+    margin: 13.3pt 28.35pt 0 0; /* ends at the right page margin, like the content */
+    padding: 2.6pt 0 0 0;
     border-top: 0.25pt solid #f1f1f1;
     font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
     font-size: 7pt;
@@ -697,7 +711,7 @@ img {
 .ho-field__label {
   display: flex;
   align-items: center;
-  gap: 4.6pt;
+  gap: var(--ho-icon-gap);
 }
 
 .ho-field__label svg {
@@ -922,7 +936,7 @@ img {
 .ho-yesno {
   display: inline-flex;
   align-items: center;
-  gap: 4.2pt;
+  gap: var(--ho-icon-gap);
 }
 
 .ho-yesno .ho-k {
@@ -964,18 +978,18 @@ img {
 .ho-rating__score {
   font-family: var(--syn-font-title);
   font-weight: 700;
-  margin-right: 3pt;
+  margin-right: var(--ho-icon-gap);
 }
 
 .ho-star {
   width: 7.6pt;
   height: 7.3pt;
-  margin-right: 3pt;
+  margin-right: var(--ho-icon-gap);
   color: var(--ho-link);
 }
 
 .ho-rating__note {
-  margin-left: 0.2em;
+  margin-left: 0;
 }
 
 .ho-field--rating .ho-field__value {
@@ -1135,7 +1149,7 @@ img {
 .ho-banner {
   display: flex;
   align-items: center;
-  gap: 8pt;
+  gap: var(--ho-icon-gap);
   margin: 0 0 16pt;
   padding: 6pt 8pt;
   border: 1pt solid #ffe7e5;
@@ -1253,7 +1267,7 @@ img {
 .ho-link__name {
   display: inline-flex;
   align-items: center;
-  gap: 4pt;
+  gap: var(--ho-icon-gap);
 }
 
 .ho-file-icon {
