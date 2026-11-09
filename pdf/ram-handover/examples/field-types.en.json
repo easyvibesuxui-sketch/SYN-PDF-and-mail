@@ -76,14 +76,6 @@
           }
         },
         {
-          "type": "yesno",
-          "label": "Hydraulic pipe problem",
-          "answer": "not_relevant",
-          "lastAnswer": {
-            "answer": "not_relevant"
-          }
-        },
-        {
           "type": "rating",
           "label": "Problem rating",
           "value": {
@@ -246,12 +238,13 @@
               }
             },
             {
-              "type": "choice",
+              "type": "yesno",
               "label": "Third question",
-              "value": "Answer 6",
+              "answer": "yes",
               "condition": false,
               "lastAnswer": {
-                "value": "Answer 2"
+                "answer": "yes",
+                "condition": true
               }
             },
             {

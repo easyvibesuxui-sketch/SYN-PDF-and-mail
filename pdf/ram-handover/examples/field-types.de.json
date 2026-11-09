@@ -76,14 +76,6 @@
           }
         },
         {
-          "type": "yesno",
-          "label": "Problem an der Hydraulikleitung",
-          "answer": "not_relevant",
-          "lastAnswer": {
-            "answer": "not_relevant"
-          }
-        },
-        {
           "type": "rating",
           "label": "Bewertung des Problems",
           "value": {
@@ -246,12 +238,13 @@
               }
             },
             {
-              "type": "choice",
+              "type": "yesno",
               "label": "Dritte Frage",
-              "value": "Antwort 6",
+              "answer": "yes",
               "condition": false,
               "lastAnswer": {
-                "value": "Antwort 2"
+                "answer": "yes",
+                "condition": true
               }
             },
             {
