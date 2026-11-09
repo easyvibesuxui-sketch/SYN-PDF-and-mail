@@ -43,6 +43,19 @@ const icon = {
 };
 
 // Field types with a one-line value: their Last Answer sits on the title line.
+// Template field type names as the app calls them, shown after the label with { showFieldTypes: true }
+// (design review only; real reports leave them out).
+const TYPE_NAMES = {
+  text: 'Input', number: 'Number', count: 'Count', date: 'Date', time: 'Time', dropdown: 'Dropdown',
+  choice: 'Chooser', switch: 'Switcher', slider: 'Slider', range: 'Range', rating: 'Rating',
+  description: 'Description', checks: 'Checks', yesno: 'Yes / No', image: 'Image', file: 'File',
+  video: 'Video', gallery: 'Gallery', ai: 'AI', group: 'Group',
+};
+
+function typeTag(ctx, type) {
+  return ctx.showTypes && TYPE_NAMES[type] ? ` <span class="ho-type">(${esc(TYPE_NAMES[type])})</span>` : '';
+}
+
 const INLINE = new Set(['text', 'number', 'count', 'date', 'time', 'dropdown', 'choice', 'switch', 'slider', 'range', 'rating', 'yesno']);
 
 // ---------- Values ------------------------------------------------------------------------------------
@@ -167,9 +180,9 @@ function fieldBand(t, f, ctx) {
     // 360 views: label and link on the band, chevron at the end
     const file = f.files[0];
     const fileIcon = file.kind === 'video' || f.type === 'video' ? icon.video : icon.pdf;
-    body = `<a class="ho-link-row" href="${esc(file.url ?? '#')}"><span><span class="ho-label ho-block">${esc(f.label)}</span><span class="ho-link__name">${fileIcon}<span class="ho-link-text">${esc(file.name)}</span></span></span>${icon.next}</a>`;
+    body = `<a class="ho-link-row" href="${esc(file.url ?? '#')}"><span><span class="ho-label ho-block">${esc(f.label)}${typeTag(ctx, f.type)}</span><span class="ho-link__name">${fileIcon}<span class="ho-link-text">${esc(file.name)}</span></span></span>${icon.next}</a>`;
   } else {
-    body = `<div class="ho-field__label ho-label${ic ? ' ho-field__label--icon' : ''}">${esc(f.label)}${ic}${note}</div>
+    body = `<div class="ho-field__label ho-label${ic ? ' ho-field__label--icon' : ''}">${esc(f.label)}${typeTag(ctx, f.type)}${ic}${note}</div>
         ${inline || ratingNote ? `<div class="ho-field__value ho-value">${inline}${ratingNote}</div>` : ''}
         ${blockValue(t, f.type, f)}`;
   }
@@ -189,7 +202,7 @@ function gallery(t, f, ctx) {
   const items = f.items ?? [];
   if (!items.length) return '';
   return `<div class="ho-field ho-field--gallery ho-field--${esc(f.type)}">
-      ${has(f.label) ? `<div class="ho-field__label ho-label">${esc(f.label)}</div>` : ''}
+      ${has(f.label) || ctx.showTypes ? `<div class="ho-field__label ho-label">${esc(f.label ?? '')}${typeTag(ctx, f.type)}</div>` : ''}
       <div class="ho-photos${f.type === 'ai' ? ' ho-photos--two' : ''}">${items
         .map(
           (p) => `<figure>
@@ -224,7 +237,7 @@ function group(t, f, ctx) {
           : '';
       return `<div class="ho-q">
             <div class="ho-q__main">
-              <div class="ho-q__text">${esc([q.no, q.label].filter(has).join(' '))}</div>
+              <div class="ho-q__text">${esc([q.no, q.label].filter(has).join(' '))}${typeTag(ctx, type)}</div>
               <div class="ho-q__complete">${complete}</div>
               <div class="ho-q__condition">${condition}</div>
             </div>
@@ -235,7 +248,7 @@ function group(t, f, ctx) {
     })
     .join('');
   return `<div class="ho-group">
-      ${has(f.label) ? `<h3 class="ho-subtitle">${esc(f.label)}</h3>` : ''}
+      ${has(f.label) ? `<h3 class="ho-subtitle">${esc(f.label)}${typeTag(ctx, 'group')}</h3>` : ''}
       <div class="ho-check">
         <div class="ho-check__head">
           <div class="ho-label">${esc(f.heading ?? '')}</div>
@@ -507,11 +520,11 @@ function closing(t, d, a, tabs, ctx) {
 
 // ---------- Document ----------------------------------------------------------------------------------
 
-export function renderHandover(data, { assetBase = './', inlineCss = null } = {}) {
+export function renderHandover(data, { assetBase = './', inlineCss = null, showFieldTypes = false } = {}) {
   const t = translator(data.lang);
   const a = assetBase;
   // Last answers show only when the handover was filled with compare on and the template did not change.
-  const ctx = { compare: Boolean(data.compare) && data.comparable !== false };
+  const ctx = { compare: Boolean(data.compare) && data.comparable !== false, showTypes: showFieldTypes };
   const tabs = data.tabs ?? [];
   const bodyTabs = tabs.filter((tab) => !tab.closing);
   const closingTabs = tabs.filter((tab) => tab.closing);

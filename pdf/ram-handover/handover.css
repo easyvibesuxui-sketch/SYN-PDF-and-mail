@@ -716,6 +716,14 @@ img {
   gap: var(--ho-icon-gap);
 }
 
+/* Field type after the label, on the design review page only (render option showFieldTypes) */
+.ho-type {
+  margin-left: 0.25em;
+  font-family: var(--syn-font-body);
+  font-weight: 500;
+  color: var(--ho-muted);
+}
+
 /* Text inside an icon row uses the row's line (the icon's height), so its capitals centre on the icon */
 .ho-yesno > *,
 .ho-link__name > *,
@@ -982,6 +990,7 @@ img {
 
 .ho-rating {
   display: inline-flex;
+  vertical-align: baseline;
   align-items: baseline;
 }
 
@@ -1003,6 +1012,7 @@ img {
 }
 
 .ho-field--rating .ho-field__value {
+  display: block; /* the comment runs on after the score, as in the PDF */
   max-width: 192pt;
   font-size: 9pt;
   line-height: 10.9pt;

@@ -60,7 +60,8 @@ const docs = [
 ];
 
 const bodies = docs.map((d) => {
-  let html = renderHandover(d.data, { assetBase: '../' });
+  // The review page names each field's template type after its label
+  let html = renderHandover(d.data, { assetBase: '../', showFieldTypes: true });
   html = html.slice(html.indexOf('<body>') + 6, html.lastIndexOf('</body>'));
   // Unwrap the print-only table frame
   html = html

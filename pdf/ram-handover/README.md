@@ -210,5 +210,6 @@ The family is licensed for this use. Do not copy the files into projects outside
 `npm run handover:review` writes `handover-review.html`: the compare, Bulk, Without booking and field-types
 reports laid out as A4 pages with paged.js, fonts and photos inlined, to publish as a claude.ai artifact and
 review by comment. Only the running header and footer are adapted to paged.js; the layout is the print
-stylesheet. Page breaks can fall slightly differently from Chromium's print (the Bulk example takes one page
+stylesheet. Each field's label is followed by its template type in grey, "Warehouse (Input)"
+(`renderHandover(data, { showFieldTypes: true })`); real reports leave it out. Page breaks can fall slightly differently from Chromium's print (the Bulk example takes one page
 more there); the PDFs in `examples/` are the reference.
