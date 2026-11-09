@@ -106,7 +106,7 @@ function files(t, type, list, { compact }) {
   return `<div class="ho-links${compact ? ' ho-links--compact' : ''}">${list
     .map(
       (f) => `<a class="ho-link" href="${esc(f.url ?? '#')}">
-          <span class="ho-link__name">${compact ? (f.kind === 'video' || type === 'video' ? icon.video : icon.pdf) : ''}<span class="ho-link-text">${esc(f.name)}${has(f.date) ? `<span class="ho-gap">${esc(f.date)}</span>` : ''}</span></span>${compact ? '' : icon.next}
+          <span class="ho-link__name">${f.kind === 'video' || type === 'video' ? icon.video : icon.pdf}<span class="ho-link-text">${esc(f.name)}${has(f.date) ? `<span class="ho-gap">${esc(f.date)}</span>` : ''}</span></span>${compact ? '' : icon.next}
         </a>`,
     )
     .join('')}</div>`;
@@ -134,8 +134,10 @@ function lastAnswer(t, type, prev, { row = false } = {}) {
   if (!prev) {
     return `<div class="ho-last${row ? ' ho-last--row' : ''}"><div class="ho-last__head">${title}<span class="ho-na">${esc(t('noPreviousAnswer'))}</span></div></div>`;
   }
-  const inline = INLINE.has(type) ? inlineValue(t, type, prev) : '';
-  const block = blockValue(t, type, prev, { compact: true });
+  // One file sits on the title line like a short value; several files are listed below it
+  const oneFile = (type === 'file' || type === 'video') && prev.files?.length === 1;
+  const inline = INLINE.has(type) ? inlineValue(t, type, prev) : oneFile ? files(t, type, prev.files, { compact: true }) : '';
+  const block = oneFile ? '' : blockValue(t, type, prev, { compact: true });
   const ratingNote = type === 'rating' && has(prev.comment) ? `<span class="ho-rating__note">${esc(prev.comment)}</span>` : '';
   const comment = type === 'rating' ? '' : info(t, prev.comment);
   const thumbs = photos(prev.photos, 'ho-thumb');
@@ -164,7 +166,8 @@ function fieldBand(t, f, ctx) {
   if (compactFile) {
     // 360 views: label and link on the band, chevron at the end
     const file = f.files[0];
-    body = `<a class="ho-link-row" href="${esc(file.url ?? '#')}"><span><span class="ho-label ho-block">${esc(f.label)}</span><span class="ho-link-text">${esc(file.name)}</span></span>${icon.next}</a>`;
+    const fileIcon = file.kind === 'video' || f.type === 'video' ? icon.video : icon.pdf;
+    body = `<a class="ho-link-row" href="${esc(file.url ?? '#')}"><span><span class="ho-label ho-block">${esc(f.label)}</span><span class="ho-link__name">${fileIcon}<span class="ho-link-text">${esc(file.name)}</span></span></span>${icon.next}</a>`;
   } else {
     body = `<div class="ho-field__label ho-label">${esc(f.label)}${ic}${note}</div>
         ${inline || ratingNote ? `<div class="ho-field__value ho-value">${inline}${ratingNote}</div>` : ''}
@@ -209,15 +212,9 @@ function group(t, f, ctx) {
     .map((q) => {
       const isYesNo = q.type === 'yesno' || q.type === undefined;
       const type = q.type ?? 'yesno';
-      // As in the PDF: Complete shows the icon for Yes and No, the words for Not relevant
+      // Complete: the answer with its icon (Yes, No, Not relevant); Condition sits in its own column
       const complete = isYesNo
-        ? q.answer === 'yes'
-          ? icon.yes(t('yes'))
-          : q.answer === 'no'
-            ? icon.no(t('no'))
-            : q.answer === 'not_relevant'
-              ? `<span class="ho-na">${esc(t('notRelevant'))}</span>`
-              : ''
+        ? yesnoHtml(t, q, { withCondition: false })
         : inlineValue(t, type, q) || blockValue(t, type, q, { compact: true });
       const condition =
         isYesNo && q.answer === 'yes' && typeof q.condition === 'boolean'

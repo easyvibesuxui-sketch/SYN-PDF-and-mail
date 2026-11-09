@@ -54,6 +54,7 @@
   --syn-color-success-mantis: #71c562;
   --syn-color-white-white: #ffffff;
   --syn-radius-widget: 12px;
+  --syn-radius-xs: 2px;
   --syn-radius-full: 999px;
 
   --syn-font-title: 'ABC Favorit Expanded', 'ABCFavorit Expanded', 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
@@ -74,6 +75,7 @@
   --ho-page-h: 841.89pt;
   --ho-margin-x: 28.35pt; /* 10 mm */
   --ho-inset: 6pt; /* fields start 6pt inside their band */
+  --ho-radius: var(--syn-radius-xs); /* every band, card, photo and link: 2px */
 }
 
 /* ---------- Pages ---------------------------------------------------------------------------------- */
@@ -185,6 +187,7 @@ img {
 .ho-value {
   font-size: 8pt;
   line-height: 9.6pt;
+  font-weight: 500;
   color: var(--ho-ink);
 }
 
@@ -403,6 +406,10 @@ img {
   padding-top: 11.4pt;
 }
 
+.ho-overview__details td {
+  padding-bottom: 10pt;
+}
+
 .ho-overview__end {
   margin-top: 0;
 }
@@ -410,11 +417,11 @@ img {
 /* Equipment details strip under an overview row (Bulk) */
 .ho-details {
   display: flex;
-  gap: 0;
+  gap: 12pt;
   align-items: baseline;
-  margin: -10pt -4pt 8pt;
-  padding: 4.6pt 6pt 4.6pt 4.6pt;
-  border-radius: var(--syn-radius-full);
+  margin: -8pt 0 0;
+  padding: 4pt var(--ho-inset);
+  border-radius: var(--ho-radius);
   background: var(--ho-fill);
   font-family: var(--syn-font-title);
   font-size: 6pt;
@@ -429,7 +436,7 @@ img {
 .ho-details .ho-k {
   color: var(--ho-muted);
   font-weight: 400;
-  margin-right: 3pt;
+  margin-right: 4pt;
 }
 
 /* Inventory summaries (Fences, Long Fences) */
@@ -613,7 +620,6 @@ img {
   display: flex;
   justify-content: space-between;
   margin-top: 8.2pt;
-  padding-right: 25.2pt;
   font-size: 6pt;
   line-height: 7.2pt;
   color: var(--ho-muted);
@@ -670,11 +676,12 @@ img {
 .ho-fields {
   display: flex;
   flex-direction: column;
-  gap: 10.5pt;
+  gap: 6pt;
 }
 
 .ho-field {
-  padding: 1.4pt var(--ho-inset) 2.9pt;
+  padding: 5pt var(--ho-inset);
+  border-radius: var(--ho-radius);
   break-inside: avoid;
 }
 
@@ -700,7 +707,7 @@ img {
 }
 
 .ho-field__value {
-  margin-top: 0.2pt;
+  margin-top: 1.6pt;
 }
 
 .ho-field__photos {
@@ -713,11 +720,12 @@ img {
   width: 172.6pt;
   height: 129.8pt;
   object-fit: cover;
+  border-radius: var(--ho-radius);
   background: var(--ho-fill);
 }
 
 .ho-field--with-photos {
-  padding-bottom: 0;
+  padding-bottom: var(--ho-inset);
 }
 
 /* Inline value after the label (Attachment 2 Technical check in PDF) */
@@ -732,25 +740,27 @@ img {
 .ho-links {
   display: flex;
   flex-direction: column;
-  gap: 7.2pt;
-  margin: 5.6pt 0 3.6pt;
+  gap: 4pt;
+  margin: 4pt 0 0;
 }
 
 .ho-link {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 14.8pt;
-  padding: 0 0 0 2.8pt;
+  gap: 8pt;
+  height: 16pt;
+  padding: 0 3pt 0 4pt;
+  border-radius: var(--ho-radius);
   background: var(--syn-color-white-white);
+  white-space: nowrap;
   text-decoration: none;
 }
 
-.ho-link svg,
-.ho-link-row svg {
+.ho-chevron {
   width: 12pt;
   height: 12pt;
-  margin-right: 1pt;
+  flex: none;
   color: var(--ho-ink);
 }
 
@@ -818,29 +828,28 @@ img {
   display: grid;
   grid-template-columns: 239pt 128.3pt 1fr;
   align-items: end;
-  padding: 0 0 9.3pt var(--ho-inset);
-  margin-right: -5.7pt;
+  padding: 0 var(--ho-inset) 6pt;
   border-bottom: 0.5pt solid var(--ho-muted);
 }
 
 .ho-check__head .ho-label:nth-child(n + 2) {
-  padding-top: 4.6pt;
+  padding-top: 0;
 }
 
 .ho-check__head .ho-label:last-child {
   text-align: center;
-  padding-right: 25.9pt;
 }
 
 .ho-check__rows {
   display: flex;
   flex-direction: column;
-  gap: 14.6pt;
-  margin-top: 2.3pt;
+  gap: 6pt;
+  margin-top: 4pt;
 }
 
 .ho-q {
-  padding: 5.6pt 0 5.6pt 0;
+  padding: 5pt var(--ho-inset);
+  border-radius: var(--ho-radius);
   break-inside: avoid;
 }
 
@@ -850,38 +859,35 @@ img {
 
 .ho-q__main {
   display: grid;
-  grid-template-columns: 245pt 128.3pt 1fr;
-  align-items: start;
-  min-height: 7.2pt;
+  grid-template-columns: 239pt 128.3pt 1fr;
+  align-items: center;
+  min-height: 10pt;
 }
 
 .ho-q__text {
-  padding-left: 16pt;
-  padding-right: 88pt;
-  font-size: 6pt;
-  line-height: 11pt;
-  margin: -1.9pt 0;
+  padding-right: 40pt;
+  font-size: 7.5pt;
+  line-height: 9.4pt;
+  font-weight: 500;
   color: var(--ho-ink);
 }
 
 .ho-q__complete {
-  padding-left: 1.2pt;
-  font-size: 6pt;
-  line-height: 7.2pt;
+  font-size: 7.5pt;
+  line-height: 9.4pt;
+  font-weight: 500;
 }
 
 .ho-q__complete svg {
-  display: block;
-  width: 11.6pt;
-  height: 11.6pt;
-  margin: -2.2pt 0 -2.2pt 11.9pt;
+  width: 10pt;
+  height: 10pt;
 }
 
 .ho-q__condition {
-  font-size: 6pt;
-  line-height: 7.2pt;
+  font-size: 7.5pt;
+  line-height: 9.4pt;
+  font-weight: 500;
   text-align: center;
-  padding-right: 25.9pt;
 }
 
 .ho-yes {
@@ -894,10 +900,10 @@ img {
 }
 
 .ho-info {
-  margin: 12pt 0 0 31pt;
-  padding-right: 100pt;
-  font-size: 6pt;
-  line-height: 11pt;
+  margin: 5pt 0 0;
+  padding-right: 60pt;
+  font-size: 7pt;
+  line-height: 9.6pt;
   color: var(--ho-ink);
 }
 
@@ -908,8 +914,8 @@ img {
 
 /* Status icons: Yes (Mantis tick), No (Honey cross), Not relevant (Silver dash) */
 .ho-status {
-  width: 9.8pt;
-  height: 9.8pt;
+  width: 9pt;
+  height: 9pt;
   flex: none;
 }
 
@@ -1006,7 +1012,7 @@ img {
 }
 
 .ho-field .ho-info {
-  margin: 4.4pt 0 0;
+  margin: 3pt 0 0;
   padding-right: 60pt;
 }
 
@@ -1016,37 +1022,56 @@ img {
    Short values sit on the title line; long ones, files and comments follow; photos are thumbnails
    on the right. */
 .ho-last {
-  margin-top: 6pt;
-  padding: 5.6pt 8pt 6pt;
+  margin-top: 4pt;
+  padding: 3pt var(--ho-inset);
   border: 0.5pt solid var(--ho-muted);
-  border-radius: var(--syn-radius-widget);
+  border-radius: var(--ho-radius);
   background: var(--syn-color-white-white);
-  font-size: 8pt;
-  line-height: 9.6pt;
+  font-size: 7pt;
+  line-height: 8.6pt;
+  font-weight: 500;
   break-inside: avoid;
 }
 
 .ho-last--photos {
   display: grid;
   grid-template-columns: 1fr auto;
-  column-gap: 12pt;
-  align-items: start;
+  column-gap: 10pt;
+  align-items: center;
 }
 
 .ho-last__head {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
-  flex-wrap: wrap;
-  column-gap: 6pt;
-  min-height: 9.8pt;
+  column-gap: 5pt;
+  min-height: 9pt;
 }
 
 .ho-last__title {
+  flex: none;
   font-family: var(--syn-font-title);
   font-weight: 500;
-  font-size: 7pt;
-  line-height: 8.8pt;
+  font-size: 6pt;
+  line-height: 8pt;
   color: var(--ho-ink);
+}
+
+.ho-last .ho-rating__score {
+  font-family: var(--syn-font-body);
+  font-weight: 700;
+}
+
+.ho-last .ho-star {
+  width: 7pt;
+  height: 6.7pt;
+}
+
+.ho-last .ho-text,
+.ho-last .ho-checks,
+.ho-last .ho-link-text {
+  font-size: 7pt;
+  line-height: 8.6pt;
 }
 
 .ho-last__main > .ho-text,
@@ -1056,30 +1081,33 @@ img {
 }
 
 .ho-last .ho-info {
-  margin: 4.4pt 0 0;
+  margin: 2pt 0 0;
   padding-right: 0;
+  font-size: 6.5pt;
+  line-height: 8.4pt;
 }
 
 .ho-thumbs {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 4pt;
-  max-width: 138pt;
+  gap: 3pt;
+  max-width: 120pt;
 }
 
 .ho-thumb {
-  width: 64.9pt;
-  height: 48.8pt;
+  width: 36pt;
+  height: 27pt;
   object-fit: cover;
+  border-radius: var(--ho-radius);
   background: var(--ho-fill);
 }
 
 /* In the checklist: 6pt text, lined up with "Additional information" */
 .ho-last--row {
-  margin: 8pt 6pt 0 31pt;
-  font-size: 6pt;
-  line-height: 7.2pt;
+  margin: 5pt 0 0;
+  font-size: 7pt;
+  line-height: 8.6pt;
 }
 
 .ho-last--row .ho-status {
@@ -1090,13 +1118,13 @@ img {
 .ho-q__photos {
   justify-content: flex-start;
   max-width: none;
-  margin: 6pt 0 0 31pt;
+  margin: 5pt 0 0;
 }
 
 /* Under a gallery photo: thumbnail only */
 .ho-photos .ho-last {
-  margin-top: 4pt;
-  padding: 4pt 6pt 5pt;
+  margin-top: 3pt;
+  padding: 3pt 5pt;
 }
 
 .ho-photos .ho-last--photos {
@@ -1111,7 +1139,7 @@ img {
   margin: 0 0 16pt;
   padding: 6pt 8pt;
   border: 1pt solid #ffe7e5;
-  border-radius: var(--syn-radius-widget);
+  border-radius: var(--ho-radius);
   background: #fffcfc;
   break-inside: avoid;
 }
@@ -1304,6 +1332,7 @@ img {
   height: 65pt;
   background: var(--ho-fill);
   border: 1pt solid var(--syn-color-white-white);
+  border-radius: var(--ho-radius);
 }
 
 .ho-signature img {
