@@ -1,0 +1,1166 @@
+/*
+ * RAM Handover Report: A4 print stylesheet.
+ *
+ * Layout measured from the InDesign PDFs (Handover Protocol Hand out / Hand in / Bulk / Without Booking /
+ * Last answer). Every length is in pt, the PDF's own unit, so positions can be checked against the
+ * originals 1:1. Colours and fonts are Syn's (tokens/syn.tokens.json).
+ *
+ * Needs a Chromium print engine (Puppeteer, Playwright, Gotenberg): it uses named pages, @page margin
+ * boxes for the footer and page number, and a table header that repeats on every page.
+ */
+
+/* ---------- Fonts ---------------------------------------------------------------------------------- */
+
+/* ABC Favorit Expanded is Syn's title face (commercial). Drop the licensed files into fonts/ under
+   these names; until then the titles fall back to Montserrat. */
+@font-face {
+  font-family: 'ABC Favorit Expanded';
+  font-weight: 400;
+  src: local('ABC Favorit Expanded Book'), local('ABCFavoritExpanded-Book'),
+    url('fonts/ABCFavoritExpanded-Book.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'ABC Favorit Expanded';
+  font-weight: 500;
+  src: local('ABC Favorit Expanded Medium'), local('ABCFavoritExpanded-Medium'),
+    url('fonts/ABCFavoritExpanded-Medium.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'ABC Favorit Expanded';
+  font-weight: 700;
+  src: local('ABC Favorit Expanded Bold'), local('ABCFavoritExpanded-Bold'),
+    url('fonts/ABCFavoritExpanded-Bold.woff2') format('woff2');
+}
+
+/* Montserrat (OFL), self-hosted: latin + latin-ext covers German. */
+@font-face { font-family: 'Montserrat'; font-weight: 400; src: url('fonts/montserrat-latin-400-normal.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Montserrat'; font-weight: 400; src: url('fonts/montserrat-latin-ext-400-normal.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Montserrat'; font-weight: 500; src: url('fonts/montserrat-latin-500-normal.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Montserrat'; font-weight: 500; src: url('fonts/montserrat-latin-ext-500-normal.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Montserrat'; font-weight: 600; src: url('fonts/montserrat-latin-600-normal.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Montserrat'; font-weight: 600; src: url('fonts/montserrat-latin-ext-600-normal.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Montserrat'; font-weight: 700; src: url('fonts/montserrat-latin-700-normal.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Montserrat'; font-weight: 700; src: url('fonts/montserrat-latin-ext-700-normal.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+
+/* ---------- Syn tokens used by the report ---------------------------------------------------------- */
+
+:root {
+  --syn-color-primary-candy-apple: #ff1900;
+  --syn-color-secondary-jet: #343434;
+  --syn-color-secondary-silver-chalince: #a7b0b3;
+  --syn-color-secondary-amber: #fe7d00;
+  --syn-color-black-eerie-black: #151515;
+  --syn-color-grey-cultured: #f1f1f1;
+  --syn-color-pending-honey: #ffb30f;
+  --syn-color-success-mantis: #71c562;
+  --syn-color-white-white: #ffffff;
+  --syn-radius-widget: 12px;
+  --syn-radius-full: 999px;
+
+  --syn-font-title: 'ABC Favorit Expanded', 'ABCFavorit Expanded', 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  --syn-font-body: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Report roles */
+  --ho-ink: var(--syn-color-black-eerie-black);
+  --ho-ink-soft: var(--syn-color-secondary-jet);
+  --ho-muted: var(--syn-color-secondary-silver-chalince);
+  --ho-brand: var(--syn-color-primary-candy-apple);
+  --ho-link: var(--syn-color-secondary-amber);
+  --ho-fill: var(--syn-color-grey-cultured);
+  --ho-ok: var(--syn-color-success-mantis);
+  --ho-fail: var(--syn-color-pending-honey);
+
+  /* Page geometry (pt) */
+  --ho-page-w: 595.28pt;
+  --ho-page-h: 841.89pt;
+  --ho-margin-x: 28.35pt; /* 10 mm */
+  --ho-inset: 6pt; /* fields start 6pt inside their band */
+}
+
+/* ---------- Pages ---------------------------------------------------------------------------------- */
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+/* Cover: no header, no footer, not counted (the body pages are numbered from 1). */
+@page cover {
+  margin: 0;
+  counter-reset: page 0;
+}
+
+/* Body pages: running header (table thead), footer and page number in the margin boxes. */
+@page body {
+  margin: 0 0 35.7pt 0;
+
+  @bottom-left {
+    content: var(--ho-footer-text, '');
+    white-space: pre;
+    vertical-align: top;
+    padding: 10pt 0 0 var(--ho-margin-x);
+    font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 6pt;
+    line-height: 9.7pt;
+    color: #a7b0b3;
+  }
+  @bottom-right {
+    content: counter(page);
+    vertical-align: top;
+    text-align: right;
+    width: 140.8pt;
+    margin: 13.3pt 5.3pt 0 0;
+    padding: 2.6pt 23.1pt 0 0;
+    border-top: 0.25pt solid #f1f1f1;
+    font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 7pt;
+    color: #a7b0b3;
+  }
+}
+
+/* Closing page (360 views, rating, signatures, company): no header, no footer. */
+@page closing {
+  margin: 0;
+}
+
+/* ---------- Base ------------------------------------------------------------------------------------ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+body {
+  margin: 0;
+  background: var(--syn-color-white-white);
+  color: var(--ho-ink);
+  font-family: var(--syn-font-body);
+  font-size: 8pt;
+  line-height: 1.2;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+}
+
+.ho-screen-only {
+  display: none;
+}
+
+/* On screen, show the sheets as paper. */
+@media screen {
+  html {
+    background: #d9dcdd;
+  }
+  body {
+    width: var(--ho-page-w);
+    margin: 24px auto;
+    background: none;
+  }
+  .ho-cover,
+  .ho-body,
+  .ho-closing {
+    background: var(--syn-color-white-white);
+    box-shadow: 0 2px 16px rgb(21 21 21 / 0.18);
+    margin-bottom: 24px;
+  }
+}
+
+/* ---------- Type roles ------------------------------------------------------------------------------ */
+
+.ho-label {
+  font-family: var(--syn-font-title);
+  font-weight: 500;
+  font-size: 7pt;
+  line-height: 8.8pt;
+  color: var(--ho-brand);
+}
+
+.ho-value {
+  font-size: 8pt;
+  line-height: 9.6pt;
+  color: var(--ho-ink);
+}
+
+.ho-section-title {
+  margin: 0;
+  font-family: var(--syn-font-title);
+  font-weight: 500;
+  font-size: 14pt;
+  line-height: 16.8pt;
+  color: var(--ho-ink);
+}
+
+.ho-small {
+  font-size: 6pt;
+  line-height: 7.2pt;
+}
+
+.ho-muted {
+  color: var(--ho-muted);
+}
+
+.ho-link-text {
+  font-family: var(--syn-font-title);
+  font-weight: 700;
+  font-size: 9pt;
+  line-height: 11.3pt;
+  color: var(--ho-link);
+}
+
+/* ---------- Rules ----------------------------------------------------------------------------------- */
+
+/* Section divider: two 0.666pt Eerie Black lines, 1.3pt apart. */
+.ho-rule {
+  height: 2pt;
+  border-top: 0.666pt solid var(--ho-ink);
+  border-bottom: 0.666pt solid var(--ho-ink);
+}
+
+/* Cover divider: two hairlines in Silver Chalice. */
+.ho-hairline {
+  height: 1pt;
+  border-top: 0.167pt solid var(--ho-muted);
+  border-bottom: 0.167pt solid var(--ho-muted);
+}
+
+.ho-hairline--single {
+  height: 0;
+  border-bottom: 0;
+}
+
+.ho-dotted {
+  height: 0;
+  border-top: 1pt dotted var(--ho-ink);
+}
+
+/* ---------- Cover ----------------------------------------------------------------------------------- */
+
+.ho-cover {
+  page: cover;
+  position: relative;
+  width: var(--ho-page-w);
+  height: calc(var(--ho-page-h) - 0.5pt);
+  padding: 36.6pt var(--ho-margin-x) 72.5pt;
+  overflow: hidden;
+  break-after: page;
+  display: flex;
+  flex-direction: column;
+}
+
+.ho-cover__date {
+  font-size: 6pt;
+  line-height: 7.2pt;
+  color: var(--ho-muted);
+}
+
+.ho-cover__logo {
+  width: 243.4pt;
+  height: 44pt;
+  margin-top: 9.5pt;
+}
+
+.ho-cover__title,
+.ho-cover__row {
+  font-family: var(--syn-font-title);
+  font-weight: 500;
+  font-size: 14pt;
+  line-height: 17.5pt;
+  color: var(--ho-ink-soft);
+}
+
+.ho-cover__title {
+  margin: 21.6pt 0 0;
+}
+
+.ho-block {
+  display: block;
+}
+
+.ho-cover__id-label {
+  margin-top: 17.2pt;
+}
+
+.ho-cover__id {
+  margin-top: 9.9pt;
+  font-family: var(--syn-font-title);
+  font-weight: 500;
+  font-size: 20pt;
+  line-height: 24.9pt;
+  color: var(--ho-ink-soft);
+  min-height: 24.9pt;
+}
+
+.ho-cover__row {
+  display: flex;
+}
+
+.ho-cover__row-label {
+  width: 109.5pt;
+  flex: none;
+}
+
+.ho-cover__row--contract {
+  margin-top: 77.9pt;
+}
+
+.ho-cover__row--type {
+  margin-top: 48.5pt;
+}
+
+.ho-cover__type {
+  color: var(--ho-brand);
+}
+
+/* The lower block sits on the bottom margin; the space above it absorbs short content. */
+.ho-cover__lower {
+  margin-top: auto;
+  padding-top: 24pt;
+}
+
+.ho-parties {
+  display: grid;
+  grid-template-columns: 220.2pt 193.2pt 1fr;
+  font-family: var(--syn-font-title);
+  font-weight: 500;
+  font-size: 8pt;
+  line-height: 10pt;
+  color: var(--ho-ink-soft);
+}
+
+.ho-parties__role {
+  margin-bottom: 23.1pt;
+}
+
+.ho-parties__line + .ho-parties__line {
+  margin-top: 12pt;
+}
+
+.ho-cover__lower > .ho-cover__divider {
+  margin-top: 62.7pt;
+}
+
+.ho-overview__title {
+  margin: 23pt 0 0 2pt;
+  font-family: var(--syn-font-title);
+  font-weight: 700;
+  font-size: 10pt;
+  line-height: 12.6pt;
+  color: var(--ho-ink);
+}
+
+/* Overview table */
+.ho-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--syn-font-title);
+  font-weight: 500;
+  font-size: 6pt;
+  line-height: 7.5pt;
+  color: var(--ho-ink);
+}
+
+.ho-table th {
+  padding: 0;
+  text-align: left;
+  font-weight: 500;
+  color: var(--ho-brand);
+}
+
+.ho-table td {
+  padding: 0;
+  vertical-align: top;
+}
+
+.ho-overview {
+  margin-top: 26.4pt;
+}
+
+.ho-overview col.ho-col-no { width: 21.3pt; }
+.ho-overview col.ho-col-product { width: 144.2pt; }
+.ho-overview col.ho-col-name { width: 123.6pt; }
+.ho-overview col.ho-col-dates { width: 188.5pt; }
+
+.ho-overview thead th {
+  padding-bottom: 14.6pt;
+}
+
+.ho-overview__item td {
+  padding-bottom: 14.3pt;
+}
+
+/* Between items: Silver hairline pair. */
+.ho-overview__item + .ho-overview__item td,
+.ho-overview__details + .ho-overview__item td {
+  border-top: 1pt double var(--ho-muted);
+  padding-top: 11.4pt;
+}
+
+.ho-overview__end {
+  margin-top: 0;
+}
+
+/* Equipment details strip under an overview row (Bulk) */
+.ho-details {
+  display: flex;
+  gap: 0;
+  align-items: baseline;
+  margin: -10pt -4pt 8pt;
+  padding: 4.6pt 6pt 4.6pt 4.6pt;
+  border-radius: var(--syn-radius-full);
+  background: var(--ho-fill);
+  font-family: var(--syn-font-title);
+  font-size: 6pt;
+  line-height: 7.5pt;
+}
+
+.ho-details > span {
+  flex: 1 1 0;
+  white-space: nowrap;
+}
+
+.ho-details .ho-k {
+  color: var(--ho-muted);
+  font-weight: 400;
+  margin-right: 3pt;
+}
+
+/* Inventory summaries (Fences, Long Fences) */
+.ho-inventory {
+  margin-top: 21.9pt;
+}
+
+.ho-inventory__block + .ho-inventory__block {
+  margin-top: 0;
+}
+
+.ho-inventory__name {
+  margin-left: 0.7pt;
+  font-family: var(--syn-font-title);
+  font-weight: 700;
+  font-size: 8pt;
+  line-height: 10pt;
+  color: var(--ho-ink);
+}
+
+.ho-inventory .ho-table {
+  margin-top: 13pt;
+}
+
+.ho-inventory .ho-table th {
+  padding-bottom: 14.5pt;
+}
+
+.ho-inventory .ho-table td {
+  padding-bottom: 8.3pt;
+}
+
+.ho-inventory col { width: 25%; }
+.ho-inventory .ho-col-total { width: 98.6pt; }
+.ho-inventory .ho-col-returned { width: 79.2pt; }
+.ho-inventory .ho-col-remaining { width: 106.4pt; }
+
+.ho-inventory__block > .ho-hairline {
+  margin: 0 0 8.4pt;
+}
+
+/* Compact cover (Bulk, Without booking): everything follows the IDs, no bottom anchoring. */
+.ho-cover--compact .ho-cover__row--contract {
+  margin-top: 45.2pt;
+}
+
+.ho-cover--compact .ho-cover__row--type {
+  margin-top: 26.5pt;
+}
+
+.ho-cover--compact .ho-cover__row-label {
+  width: auto;
+  margin-right: 0.28em;
+}
+
+.ho-cover--compact .ho-cover__lower {
+  margin-top: 0;
+  padding-top: 26.6pt;
+}
+
+.ho-cover--compact .ho-parties {
+  grid-template-columns: 216.4pt 1fr;
+  font-size: 9pt;
+  line-height: 11pt;
+}
+
+.ho-cover--compact .ho-parties__role {
+  margin-bottom: 9.5pt;
+  font-size: 6pt;
+  line-height: 7.5pt;
+}
+
+.ho-cover--compact .ho-parties__line + .ho-parties__line {
+  margin-top: 7.4pt;
+}
+
+.ho-site {
+  margin: 55.3pt 0 0 2pt;
+  font-family: var(--syn-font-title);
+  font-weight: 500;
+}
+
+.ho-site__label {
+  font-size: 6pt;
+  line-height: 7.5pt;
+  color: var(--ho-ink-soft);
+}
+
+.ho-site__value {
+  margin-top: 2.9pt;
+  font-size: 9pt;
+  line-height: 11pt;
+  color: var(--ho-brand);
+}
+
+.ho-cover--compact .ho-cover__lower > .ho-cover__divider {
+  margin-top: 30.8pt;
+}
+
+.ho-cover--compact .ho-overview__title {
+  margin-top: 21.5pt;
+}
+
+.ho-cover--compact .ho-overview {
+  margin-top: 8pt;
+  border-top: 0.167pt solid var(--ho-muted);
+}
+
+.ho-cover--compact .ho-overview thead th {
+  padding-top: 14.4pt;
+}
+
+/* Equipment card on the cover (Without booking) */
+.ho-equipment {
+  margin-top: 34pt;
+  font-family: var(--syn-font-title);
+  font-weight: 500;
+}
+
+.ho-equipment__key {
+  font-size: 8pt;
+  line-height: 10pt;
+  color: var(--ho-muted);
+}
+
+.ho-equipment__title {
+  margin-top: 5pt;
+  font-size: 11pt;
+  line-height: 13.7pt;
+  color: var(--ho-ink);
+}
+
+.ho-equipment__grid {
+  display: grid;
+  grid-template-columns: 149.5pt 121.5pt 172pt 1fr;
+  margin-top: 13.8pt;
+}
+
+.ho-equipment__grid .ho-equipment__key {
+  font-size: 6pt;
+  line-height: 7.5pt;
+}
+
+.ho-equipment__grid .ho-equipment__val {
+  margin-top: 9.3pt;
+  font-size: 8pt;
+  line-height: 10pt;
+  color: var(--ho-ink);
+}
+
+/* ---------- Body pages ------------------------------------------------------------------------------ */
+
+.ho-body {
+  page: body;
+  width: var(--ho-page-w);
+}
+
+.ho-body__frame {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ho-body__frame > thead > tr > td,
+.ho-body__frame > tbody > tr > td {
+  padding: 0;
+}
+
+/* Running header */
+.ho-header {
+  position: relative;
+  height: 56pt;
+  padding: 14.2pt var(--ho-margin-x) 0;
+}
+
+.ho-header__logo {
+  width: 78.2pt;
+  height: 14.1pt;
+}
+
+.ho-header__meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8.2pt;
+  padding-right: 25.2pt;
+  font-size: 6pt;
+  line-height: 7.2pt;
+  color: var(--ho-muted);
+}
+
+.ho-header__meta span + span::before {
+  content: none;
+}
+
+.ho-content {
+  padding: 0 var(--ho-margin-x);
+}
+
+.ho-section {
+  padding: 11pt 0 15pt;
+}
+
+.ho-section--spaced {
+  padding-top: 19pt;
+}
+
+.ho-section:first-child {
+  padding-top: 4pt;
+}
+
+.ho-content > .ho-section:first-child > .ho-section-title:first-child {
+  margin-top: 16.7pt;
+}
+
+.ho-section > .ho-section-title {
+  margin: 0 0 9.6pt 1.5pt;
+}
+
+.ho-section-title + .ho-subtitle {
+  margin-top: 16.7pt;
+}
+
+.ho-section-title,
+.ho-subtitle,
+.ho-check__head {
+  break-after: avoid;
+}
+
+.ho-subtitle {
+  margin: 0 0 6.6pt 0.3pt;
+  font-family: var(--syn-font-title);
+  font-weight: 500;
+  font-size: 10pt;
+  line-height: 12.5pt;
+  color: var(--ho-ink);
+}
+
+/* Field bands: label over value, every second band filled */
+.ho-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10.5pt;
+}
+
+.ho-field {
+  padding: 1.4pt var(--ho-inset) 2.9pt;
+  break-inside: avoid;
+}
+
+.ho-field:nth-child(even) {
+  background: var(--ho-fill);
+}
+
+.ho-fields--single .ho-field,
+.ho-field--filled {
+  background: var(--ho-fill);
+}
+
+.ho-field__label {
+  display: flex;
+  align-items: center;
+  gap: 4.6pt;
+}
+
+.ho-field__label svg {
+  width: 7.5pt;
+  height: 7.5pt;
+  flex: none;
+}
+
+.ho-field__value {
+  margin-top: 0.2pt;
+}
+
+.ho-field__photos {
+  display: flex;
+  gap: 7.3pt;
+  margin: 4.4pt 0 0;
+}
+
+.ho-photo {
+  width: 172.6pt;
+  height: 129.8pt;
+  object-fit: cover;
+  background: var(--ho-fill);
+}
+
+.ho-field--with-photos {
+  padding-bottom: 0;
+}
+
+/* Inline value after the label (Attachment 2 Technical check in PDF) */
+.ho-field__inline {
+  font-family: var(--syn-font-body);
+  font-weight: 400;
+  font-size: 8pt;
+  color: var(--ho-ink);
+}
+
+/* Document and video links */
+.ho-links {
+  display: flex;
+  flex-direction: column;
+  gap: 7.2pt;
+  margin: 5.6pt 0 3.6pt;
+}
+
+.ho-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 14.8pt;
+  padding: 0 0 0 2.8pt;
+  background: var(--syn-color-white-white);
+  text-decoration: none;
+}
+
+.ho-link svg,
+.ho-link-row svg {
+  width: 12pt;
+  height: 12pt;
+  margin-right: 1pt;
+  color: var(--ho-ink);
+}
+
+.ho-link-text .ho-gap {
+  margin-left: 0.35em;
+}
+
+/* Operating hours per equipment (Bulk) */
+.ho-hours {
+  display: grid;
+  grid-template-columns: 17.8pt 250.2pt 1fr;
+  row-gap: 8pt;
+  align-items: end;
+  padding: 0 0 0 4.9pt;
+}
+
+.ho-hours__no {
+  font-family: var(--syn-font-title);
+  font-weight: 500;
+  font-size: 6pt;
+  line-height: 7.5pt;
+  padding-bottom: 3.8pt;
+}
+
+.ho-hours__cell {
+  padding: 1.4pt 0 2.8pt;
+}
+
+.ho-hours__cell .ho-label {
+  font-size: 6pt;
+  line-height: 7.5pt;
+}
+
+.ho-hours__cell .ho-value {
+  font-family: var(--syn-font-title);
+  font-weight: 500;
+  font-size: 7pt;
+  line-height: 8.8pt;
+}
+
+.ho-hours__cell .ho-value--book {
+  font-weight: 400;
+}
+
+.ho-hours__row {
+  display: contents;
+}
+
+/* Operating hours, then Rental information: 18.4pt gap as in Bulk / Without booking */
+.ho-hours-block {
+  margin-top: 0;
+}
+
+.ho-hours-block + .ho-section-title {
+  margin-top: 18.4pt !important;
+}
+
+.ho-hours__band {
+  grid-column: 1 / -1;
+}
+
+/* ---------- Checklist (Question groups) ------------------------------------------------------------- */
+
+.ho-check__head {
+  display: grid;
+  grid-template-columns: 239pt 128.3pt 1fr;
+  align-items: end;
+  padding: 0 0 9.3pt var(--ho-inset);
+  margin-right: -5.7pt;
+  border-bottom: 0.5pt solid var(--ho-muted);
+}
+
+.ho-check__head .ho-label:nth-child(n + 2) {
+  padding-top: 4.6pt;
+}
+
+.ho-check__head .ho-label:last-child {
+  text-align: center;
+  padding-right: 25.9pt;
+}
+
+.ho-check__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 14.6pt;
+  margin-top: 2.3pt;
+}
+
+.ho-q {
+  padding: 5.6pt 0 5.6pt 0;
+  break-inside: avoid;
+}
+
+.ho-q:nth-child(even) {
+  background: var(--ho-fill);
+}
+
+.ho-q__main {
+  display: grid;
+  grid-template-columns: 245pt 128.3pt 1fr;
+  align-items: start;
+  min-height: 7.2pt;
+}
+
+.ho-q__text {
+  padding-left: 16pt;
+  padding-right: 88pt;
+  font-size: 6pt;
+  line-height: 11pt;
+  margin: -1.9pt 0;
+  color: var(--ho-ink);
+}
+
+.ho-q__complete {
+  padding-left: 1.2pt;
+  font-size: 6pt;
+  line-height: 7.2pt;
+}
+
+.ho-q__complete svg {
+  display: block;
+  width: 11.6pt;
+  height: 11.6pt;
+  margin: -2.2pt 0 -2.2pt 11.9pt;
+}
+
+.ho-q__condition {
+  font-size: 6pt;
+  line-height: 7.2pt;
+  text-align: center;
+  padding-right: 25.9pt;
+}
+
+.ho-yes {
+  color: var(--ho-ok);
+}
+
+.ho-no,
+.ho-na {
+  color: var(--ho-muted);
+}
+
+.ho-info {
+  margin: 12pt 0 0 31pt;
+  padding-right: 100pt;
+  font-size: 6pt;
+  line-height: 11pt;
+  color: var(--ho-ink);
+}
+
+.ho-info__key {
+  color: var(--ho-muted);
+  margin-right: 3pt;
+}
+
+/* Last answer card */
+.ho-answers {
+  margin-top: 10pt;
+  padding: 5.6pt 13.4pt 6.8pt 17.6pt;
+  border: 0.5pt solid var(--ho-muted);
+  border-radius: var(--syn-radius-widget);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.ho-answers__title {
+  font-family: var(--syn-font-title);
+  font-weight: 500;
+  font-size: 7pt;
+  line-height: 8.8pt;
+  color: var(--ho-ink);
+  margin-bottom: 5.8pt;
+}
+
+.ho-answer {
+  display: grid;
+  grid-template-columns: 1fr 64.9pt;
+  column-gap: 12pt;
+  break-inside: avoid;
+}
+
+.ho-answer + .ho-answer {
+  margin-top: 9pt;
+}
+
+.ho-answer__q {
+  display: flex;
+  align-items: center;
+  gap: 5.4pt;
+  font-size: 6pt;
+  line-height: 7.2pt;
+}
+
+.ho-answer__q svg {
+  width: 9.8pt;
+  height: 9.8pt;
+}
+
+.ho-answer .ho-info {
+  margin: 4.4pt 0 0;
+  padding-right: 0;
+}
+
+.ho-answer__photo {
+  width: 64.9pt;
+  height: 48.8pt;
+  object-fit: cover;
+  margin-top: -5.6pt;
+}
+
+/* ---------- Photos ---------------------------------------------------------------------------------- */
+
+.ho-photos {
+  display: grid;
+  grid-template-columns: repeat(3, 172.8pt);
+  column-gap: 8.3pt;
+  row-gap: 7.7pt;
+  margin-left: 4.4pt;
+}
+
+.ho-photos figure {
+  margin: 0;
+  break-inside: avoid;
+}
+
+.ho-photos figcaption {
+  margin: 0 0 -1.6pt 3.4pt;
+}
+
+.ho-photos .ho-photo {
+  width: 172.8pt;
+  height: 129.9pt;
+}
+
+/* ---------- Closing page ---------------------------------------------------------------------------- */
+
+.ho-closing {
+  page: closing;
+  break-before: page;
+  width: var(--ho-page-w);
+  min-height: calc(var(--ho-page-h) - 0.5pt);
+  padding: 62.9pt var(--ho-margin-x) 24pt;
+}
+
+.ho-closing .ho-section {
+  padding: 0;
+}
+
+.ho-closing .ho-section > .ho-section-title {
+  margin: 0 0 12.1pt 1.5pt;
+}
+
+.ho-link-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4.3pt;
+}
+
+.ho-link-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.7pt 7.2pt 3.4pt var(--ho-inset);
+  text-decoration: none;
+}
+
+.ho-link-row:nth-child(even) {
+  background: var(--ho-fill);
+}
+
+.ho-closing .ho-rule {
+  margin: 14pt 0 19.8pt;
+}
+
+.ho-rating {
+  padding-left: 6.5pt;
+}
+
+.ho-rating__value {
+  max-width: 192pt;
+  margin-top: 1.2pt;
+  font-size: 9pt;
+  line-height: 10.9pt;
+}
+
+.ho-rating__score {
+  font-family: var(--syn-font-title);
+  font-weight: 700;
+  margin-right: 3pt;
+}
+
+.ho-rating__star {
+  display: inline-block;
+  width: 7.6pt;
+  height: 7.3pt;
+  margin-right: 3pt;
+  vertical-align: -0.6pt;
+  color: var(--ho-link);
+}
+
+.ho-closing .ho-dotted {
+  margin: 41pt 0 34pt;
+}
+
+/* Signatures */
+.ho-signers {
+  display: flex;
+  flex-direction: column;
+  gap: 34pt;
+}
+
+.ho-signer {
+  display: grid;
+  grid-template-columns: 1fr 208.1pt;
+  break-inside: avoid;
+}
+
+.ho-signer__who {
+  padding: 4.8pt 0 0 0.9pt;
+}
+
+.ho-signer__lines {
+  margin-top: 12.6pt;
+  padding-left: 4.6pt;
+  font-size: 7pt;
+  line-height: 8.4pt;
+}
+
+.ho-signer__lines > div + div {
+  margin-top: 13.6pt;
+}
+
+.ho-signer__name--strong {
+  font-family: var(--syn-font-title);
+  font-weight: 500;
+}
+
+.ho-signature {
+  height: 65pt;
+  background: var(--ho-fill);
+  border: 1pt solid var(--syn-color-white-white);
+}
+
+.ho-signature img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.ho-signer__stamp {
+  padding-top: 23.6pt;
+  font-size: 6pt;
+  line-height: 7.2pt;
+}
+
+.ho-signer__stamp > div + div {
+  margin-top: 14.8pt;
+  display: flex;
+  gap: 0;
+}
+
+.ho-signer__stamp .ho-stamp-id {
+  margin-left: auto;
+  padding-right: 16.8pt;
+}
+
+/* Company block */
+.ho-company {
+  margin-top: 43.6pt;
+  color: var(--ho-brand);
+  font-size: 6pt;
+  line-height: 7.2pt;
+}
+
+.ho-company__logo {
+  width: 38pt;
+  height: 6.9pt;
+  margin-left: 0.9pt;
+}
+
+.ho-company__brand {
+  margin: 4.6pt 0 0 1.5pt;
+}
+
+.ho-company__grid {
+  display: grid;
+  grid-template-columns: 151.3pt 109.6pt 152.4pt 1fr;
+  row-gap: 3.8pt;
+  margin-top: 25.8pt;
+}
+
+.ho-company__grid > div > div + div {
+  margin-top: 3.8pt;
+}
+
+.ho-company__mgmt {
+  margin: 14.8pt 0 0 1.8pt;
+}
+
+.ho-company__terms {
+  margin-top: 14.8pt;
+}
+
+.ho-company__terms-title {
+  margin-left: 1.9pt;
+}
+
+.ho-company__terms p {
+  margin: 3.8pt 0 0;
+  max-width: 430pt;
+  line-height: 11pt;
+  margin-top: 0;
+}
