@@ -90,9 +90,11 @@
   --ho-inset: 6pt; /* fields start 6pt inside their band */
   --ho-radius: var(--syn-radius-xs); /* every band, card, photo and link: 2px */
   --ho-icon-gap: 4px; /* between an icon and its text, everywhere */
+  --ho-icon-size: 10pt; /* every icon: status, label, chevron, file, star, banner */
+  --ho-icon-color: var(--ho-muted); /* utility icons are Silver Chalice */
   /* Last Answer: one size for each part, in every field type */
-  --ho-last-img-w: 64pt;
-  --ho-last-img-h: 48pt;
+  --ho-last-img-w: 64px; /* square, 64 x 64px */
+  --ho-last-img-h: 64px;
   --ho-last-answer: 7.5pt; /* the main answer */
   --ho-last-sub: 7pt; /* the secondary answer (Condition) */
   --ho-last-text: 7pt; /* additional information */
@@ -710,17 +712,21 @@ img {
 
 .ho-field__label {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: var(--ho-icon-gap);
 }
 
-.ho-field__label svg {
-  width: 7.5pt;
-  height: 7.5pt;
+.ho-icon {
+  width: var(--ho-icon-size);
+  height: var(--ho-icon-size);
   flex: none;
+  color: var(--ho-icon-color);
 }
 
 .ho-field__value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
   margin-top: 1.6pt;
 }
 
@@ -772,10 +778,10 @@ img {
 }
 
 .ho-chevron {
-  width: 12pt;
-  height: 12pt;
+  width: var(--ho-icon-size);
+  height: var(--ho-icon-size);
   flex: none;
-  color: var(--ho-ink);
+  color: var(--ho-icon-color);
 }
 
 .ho-link-text .ho-gap {
@@ -880,21 +886,21 @@ img {
 }
 
 .ho-q__complete {
+  display: flex;
+  align-items: center;
   font-size: 7.5pt;
   line-height: 9.4pt;
   font-weight: 500;
 }
 
-.ho-q__complete svg {
-  width: 10pt;
-  height: 10pt;
-}
 
 .ho-q__condition {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 7.5pt;
   line-height: 9.4pt;
   font-weight: 500;
-  text-align: center;
 }
 
 .ho-yes {
@@ -921,15 +927,16 @@ img {
 
 /* Status icons: Yes (Mantis tick), No (Honey cross), Not relevant (Silver dash) */
 .ho-status {
-  width: 9pt;
-  height: 9pt;
+  width: var(--ho-icon-size);
+  height: var(--ho-icon-size);
   flex: none;
 }
 
 .ho-yesno {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
   gap: var(--ho-icon-gap);
+  line-height: var(--ho-icon-size); /* the icon's height, so icon and text share a centre */
 }
 
 .ho-yesno .ho-sub {
@@ -948,7 +955,7 @@ img {
 /* Field values by type */
 .ho-range {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
 }
 
 .ho-dot {
@@ -962,7 +969,7 @@ img {
 
 .ho-rating {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
 }
 
 .ho-rating__score {
@@ -972,8 +979,8 @@ img {
 }
 
 .ho-star {
-  width: 7.6pt;
-  height: 7.3pt;
+  width: var(--ho-icon-size);
+  height: var(--ho-icon-size);
   margin-right: var(--ho-icon-gap);
   color: var(--ho-link);
 }
@@ -1020,6 +1027,18 @@ img {
   padding-right: 60pt;
 }
 
+/* Rows that mix sizes and faces (title + value, label + note, icon + text) align on one text
+   baseline (align-items: baseline on each row); icons and the range dot are centred on it. */
+.ho-last__head svg,
+.ho-field__label svg,
+.ho-field__value svg,
+.ho-yesno svg,
+.ho-link__name svg,
+.ho-rating svg,
+.ho-range .ho-dot {
+  align-self: center;
+}
+
 /* ---------- Last Answer ---------------------------------------------------------------------------- */
 
 /* The PDF's Last Answer card (rounded, Silver hairline), under every field when compare is on.
@@ -1047,7 +1066,7 @@ img {
 .ho-last__head {
   display: flex;
   flex-wrap: nowrap;
-  align-items: center;
+  align-items: baseline;
   column-gap: 5pt;
   min-height: 9pt;
 }
@@ -1066,10 +1085,6 @@ img {
   font-weight: 700;
 }
 
-.ho-last .ho-star {
-  width: 7pt;
-  height: 6.7pt;
-}
 
 .ho-last .ho-text,
 .ho-last .ho-checks,
@@ -1117,10 +1132,6 @@ img {
   margin: 5pt 0 0;
 }
 
-.ho-last--row .ho-status {
-  width: 9.8pt;
-  height: 9.8pt;
-}
 
 .ho-q__photos {
   justify-content: flex-start;
@@ -1150,11 +1161,6 @@ img {
   break-inside: avoid;
 }
 
-.ho-banner svg {
-  width: 12pt;
-  height: 12pt;
-  flex: none;
-}
 
 .ho-banner__title {
   font-size: 7pt;
@@ -1261,13 +1267,14 @@ img {
 
 .ho-link__name {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
   gap: var(--ho-icon-gap);
+  line-height: var(--ho-icon-size); /* the icon's height, so icon and text share a centre */
 }
 
 .ho-file-icon {
-  width: 9pt;
-  height: 11pt;
+  width: calc(var(--ho-icon-size) * 18 / 22); /* the file glyph is 18 x 22 */
+  height: var(--ho-icon-size);
   flex: none;
 }
 
