@@ -267,7 +267,7 @@ function tabBody(t, tab, ctx) {
     }
   }
   flush();
-  return out.join('');
+  return `<div class="ho-tab">${out.join('')}</div>`;
 }
 
 function tabSection(t, tab, ctx, prefix = '') {
@@ -308,7 +308,7 @@ function cover(t, d, a) {
         <tbody>
           ${d.overview
             .map(
-              (r, i) => `<tr class="ho-overview__item">
+              (r, i) => `<tr class="ho-overview__item${i > 0 ? ' ho-overview__item--ruled' : ''}">
             <td>#${esc(r.no ?? i + 1)}</td><td>${esc(r.product)}</td><td>${esc(r.name)}</td><td>${esc(r.bookingDates)}</td><td>${esc(r.quantity)}</td>
           </tr>${
             has(r.details)
@@ -464,7 +464,7 @@ function closing(t, d, a, tabs, ctx) {
           const right = s.signature
             ? `<div class="ho-signature"><img src="${esc(s.signature)}" alt="${esc(t('signature'))}"></div>`
             : isCustomer
-              ? `<div class="ho-signer__stamp"><div>${esc(s.signedAt ?? d.createdAt)}</div><div><span>${esc(t('handoverReport'))}</span><span class="ho-stamp-id">${esc(d.handoverId ?? '')}</span></div></div>`
+              ? `<div class="ho-signer__stamp"><div>${esc(s.signedAt ?? d.createdAt)}</div><div class="ho-stamp-row"><span>${esc(t('handoverReport'))}</span><span class="ho-stamp-id">${esc(d.handoverId ?? '')}</span></div></div>`
               : `<div class="ho-signature" aria-label="${esc(t('signature'))}"></div>`;
           return `<div class="ho-signer">
             <div class="ho-signer__who">

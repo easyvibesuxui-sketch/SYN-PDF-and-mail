@@ -358,12 +358,15 @@ img {
   color: var(--ho-ink-soft);
 }
 
-.ho-parties__role {
-  margin-bottom: 23.1pt;
+/* Each party: role, then its lines (paged.js drops '+' selectors, so spacing is gap-based) */
+.ho-parties > div {
+  display: flex;
+  flex-direction: column;
+  gap: 12pt;
 }
 
-.ho-parties__line + .ho-parties__line {
-  margin-top: 12pt;
+.ho-parties__role {
+  margin-bottom: 11.1pt; /* 23.1pt to the first line with the gap */
 }
 
 .ho-cover__lower > .ho-cover__divider {
@@ -420,8 +423,7 @@ img {
 }
 
 /* Between items: Silver hairline pair. */
-.ho-overview__item + .ho-overview__item td,
-.ho-overview__details + .ho-overview__item td {
+.ho-overview__item--ruled td {
   border-top: 1pt double var(--ho-muted);
   padding-top: 11.4pt;
 }
@@ -464,9 +466,6 @@ img {
   margin-top: 21.9pt;
 }
 
-.ho-inventory__block + .ho-inventory__block {
-  margin-top: 0;
-}
 
 .ho-inventory__name {
   margin-left: 0.7pt;
@@ -523,15 +522,16 @@ img {
   line-height: 11pt;
 }
 
+.ho-cover--compact .ho-parties > div {
+  gap: 7.4pt;
+}
+
 .ho-cover--compact .ho-parties__role {
-  margin-bottom: 9.5pt;
+  margin-bottom: 2.1pt; /* 9.5pt with the gap */
   font-size: 6pt;
   line-height: 7.5pt;
 }
 
-.ho-cover--compact .ho-parties__line + .ho-parties__line {
-  margin-top: 7.4pt;
-}
 
 .ho-site {
   margin: 55.3pt 0 0 2pt;
@@ -645,9 +645,6 @@ img {
   color: var(--ho-muted);
 }
 
-.ho-header__meta span + span::before {
-  content: none;
-}
 
 .ho-content {
   padding: 0 var(--ho-margin-x);
@@ -673,9 +670,6 @@ img {
   margin: 0 0 9.6pt 1.5pt;
 }
 
-.ho-section-title + .ho-subtitle {
-  margin-top: 16.7pt;
-}
 
 .ho-section-title,
 .ho-subtitle,
@@ -831,11 +825,7 @@ img {
 
 /* Operating hours, then Rental information: 18.4pt gap as in Bulk / Without booking */
 .ho-hours-block {
-  margin-top: 0;
-}
-
-.ho-hours-block + .ho-section-title {
-  margin-top: 18.4pt !important;
+  margin-bottom: 18.4pt;
 }
 
 .ho-hours__band {
@@ -852,9 +842,6 @@ img {
   border-bottom: 0.5pt solid var(--ho-muted);
 }
 
-.ho-check__head .ho-label:nth-child(n + 2) {
-  padding-top: 0;
-}
 
 .ho-check__head .ho-label:last-child {
   text-align: center;
@@ -972,9 +959,6 @@ img {
   background: var(--ho-muted);
 }
 
-.ho-range .ho-dot + .ho-k {
-  margin-left: 0;
-}
 
 .ho-rating {
   display: inline-flex;
@@ -1013,6 +997,9 @@ img {
 }
 
 .ho-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4pt;
   margin: 0.2pt 0 0;
   padding: 0;
   list-style: none;
@@ -1020,9 +1007,6 @@ img {
   line-height: 10.4pt;
 }
 
-.ho-checks li + li {
-  margin-top: 2.4pt;
-}
 
 .ho-helper {
   margin-top: 1.2pt;
@@ -1219,12 +1203,15 @@ img {
   break-inside: auto;
 }
 
-.ho-field--gallery + .ho-field--gallery,
-.ho-fields + .ho-field--gallery,
-.ho-field--gallery + .ho-fields,
-.ho-group + .ho-fields,
-.ho-fields + .ho-group {
-  margin-top: 14pt;
+/* A tab's blocks (field lists, groups, galleries), 14pt apart */
+.ho-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 14pt;
+}
+
+.ho-tab > .ho-group:first-child {
+  margin-top: 7.1pt; /* 16.7pt under the tab title */
 }
 
 .ho-field--gallery > .ho-field__label {
@@ -1335,15 +1322,15 @@ img {
 }
 
 .ho-signer__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 13.6pt;
   margin-top: 12.6pt;
   padding-left: 4.6pt;
   font-size: 7pt;
   line-height: 8.4pt;
 }
 
-.ho-signer__lines > div + div {
-  margin-top: 13.6pt;
-}
 
 .ho-signer__name--strong {
   font-family: var(--syn-font-title);
@@ -1364,15 +1351,16 @@ img {
 }
 
 .ho-signer__stamp {
+  display: flex;
+  flex-direction: column;
+  gap: 14.8pt;
   padding-top: 23.6pt;
   font-size: 6pt;
   line-height: 7.2pt;
 }
 
-.ho-signer__stamp > div + div {
-  margin-top: 14.8pt;
+.ho-stamp-row {
   display: flex;
-  gap: 0;
 }
 
 .ho-signer__stamp .ho-stamp-id {
@@ -1406,8 +1394,10 @@ img {
   margin-top: 25.8pt;
 }
 
-.ho-company__grid > div > div + div {
-  margin-top: 3.8pt;
+.ho-company__grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3.8pt;
 }
 
 .ho-company__mgmt {
