@@ -76,6 +76,14 @@
           }
         },
         {
+          "type": "yesno",
+          "label": "Hydraulic pipe problem",
+          "answer": "not_relevant",
+          "lastAnswer": {
+            "answer": "not_relevant"
+          }
+        },
+        {
           "type": "rating",
           "label": "Problem rating",
           "value": {

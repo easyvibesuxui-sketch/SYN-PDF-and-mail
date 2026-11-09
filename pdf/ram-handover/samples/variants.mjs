@@ -381,6 +381,7 @@ function showcase(x) {
           { answer: 'yes', comment: x.damage, photos: [ph('attachment-mirror-1'), ph('attachment-mirror-2')] },
         ),
         la({ type: 'yesno', label: x.fYes, answer: 'no', comment: x.damage }, { answer: 'yes' }),
+        la({ type: 'yesno', label: x.fYes, answer: 'not_relevant' }, { answer: 'not_relevant' }),
         la({ type: 'rating', label: x.fRating, value: { score: 3, max: 5 }, comment: x.damage }, { value: { score: 3, max: 5 }, comment: x.damage }),
         la({ type: 'range', label: x.fRange, value: { from: 10, to: 50 }, unit: '%' }, { value: { from: 10, to: 50 }, unit: '%' }),
         la({ type: 'description', label: x.fDesc, value: x.damage }, { value: x.damage }),
