@@ -678,7 +678,7 @@ img {
   break-inside: avoid;
 }
 
-.ho-field:nth-child(even) {
+.ho-fields > .ho-field:nth-child(even) {
   background: var(--ho-fill);
 }
 
@@ -906,59 +906,235 @@ img {
   margin-right: 3pt;
 }
 
-/* Last answer card */
-.ho-answers {
-  margin-top: 10pt;
-  padding: 5.6pt 13.4pt 6.8pt 17.6pt;
-  border: 0.5pt solid var(--ho-muted);
-  border-radius: var(--syn-radius-widget);
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
+/* Status icons: Yes (Mantis tick), No (Honey cross), Not relevant (Silver dash) */
+.ho-status {
+  width: 9.8pt;
+  height: 9.8pt;
+  flex: none;
 }
 
-.ho-answers__title {
+.ho-yesno {
+  display: inline-flex;
+  align-items: center;
+  gap: 4.2pt;
+}
+
+.ho-yesno .ho-k {
+  margin-left: 8pt;
+}
+
+.ho-k {
+  color: var(--ho-muted);
+  margin-right: 3pt;
+}
+
+.ho-answer-no {
+  color: var(--ho-ink);
+}
+
+/* Field values by type */
+.ho-range {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ho-dot {
+  width: 2.4pt;
+  height: 2.4pt;
+  margin: 0 5pt;
+  border-radius: 50%;
+  background: var(--ho-muted);
+}
+
+.ho-range .ho-dot + .ho-k {
+  margin-left: 0;
+}
+
+.ho-rating {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ho-rating__score {
+  font-family: var(--syn-font-title);
+  font-weight: 700;
+  margin-right: 3pt;
+}
+
+.ho-star {
+  width: 7.6pt;
+  height: 7.3pt;
+  margin-right: 3pt;
+  color: var(--ho-link);
+}
+
+.ho-rating__note {
+  margin-left: 0.2em;
+}
+
+.ho-field--rating .ho-field__value {
+  max-width: 192pt;
+  font-size: 9pt;
+  line-height: 10.9pt;
+}
+
+.ho-text {
+  margin-top: 0.2pt;
+  max-width: 430pt;
+  white-space: pre-line;
+  font-size: 8pt;
+  line-height: 10.4pt;
+}
+
+.ho-checks {
+  margin: 0.2pt 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 8pt;
+  line-height: 10.4pt;
+}
+
+.ho-checks li + li {
+  margin-top: 2.4pt;
+}
+
+.ho-helper {
+  margin-top: 1.2pt;
+  font-size: 6pt;
+  line-height: 7.2pt;
+  color: var(--ho-muted);
+}
+
+.ho-field .ho-info {
+  margin: 4.4pt 0 0;
+  padding-right: 60pt;
+}
+
+/* ---------- Last Answer ---------------------------------------------------------------------------- */
+
+/* The PDF's Last Answer card (rounded, Silver hairline), under every field when compare is on.
+   Short values sit on the title line; long ones, files and comments follow; photos are thumbnails
+   on the right. */
+.ho-last {
+  margin-top: 6pt;
+  padding: 5.6pt 8pt 6pt;
+  border: 0.5pt solid var(--ho-muted);
+  border-radius: var(--syn-radius-widget);
+  background: var(--syn-color-white-white);
+  font-size: 8pt;
+  line-height: 9.6pt;
+  break-inside: avoid;
+}
+
+.ho-last--photos {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 12pt;
+  align-items: start;
+}
+
+.ho-last__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: 6pt;
+  min-height: 9.8pt;
+}
+
+.ho-last__title {
   font-family: var(--syn-font-title);
   font-weight: 500;
   font-size: 7pt;
   line-height: 8.8pt;
   color: var(--ho-ink);
-  margin-bottom: 5.8pt;
 }
 
-.ho-answer {
-  display: grid;
-  grid-template-columns: 1fr 64.9pt;
-  column-gap: 12pt;
-  break-inside: avoid;
+.ho-last__main > .ho-text,
+.ho-last__main > .ho-checks,
+.ho-last__main > .ho-links {
+  margin-top: 3.6pt;
 }
 
-.ho-answer + .ho-answer {
-  margin-top: 9pt;
-}
-
-.ho-answer__q {
-  display: flex;
-  align-items: center;
-  gap: 5.4pt;
-  font-size: 6pt;
-  line-height: 7.2pt;
-}
-
-.ho-answer__q svg {
-  width: 9.8pt;
-  height: 9.8pt;
-}
-
-.ho-answer .ho-info {
+.ho-last .ho-info {
   margin: 4.4pt 0 0;
   padding-right: 0;
 }
 
-.ho-answer__photo {
+.ho-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4pt;
+  max-width: 138pt;
+}
+
+.ho-thumb {
   width: 64.9pt;
   height: 48.8pt;
   object-fit: cover;
-  margin-top: -5.6pt;
+  background: var(--ho-fill);
+}
+
+/* In the checklist: 6pt text, lined up with "Additional information" */
+.ho-last--row {
+  margin: 8pt 6pt 0 31pt;
+  font-size: 6pt;
+  line-height: 7.2pt;
+}
+
+.ho-last--row .ho-status {
+  width: 9.8pt;
+  height: 9.8pt;
+}
+
+.ho-q__photos {
+  justify-content: flex-start;
+  max-width: none;
+  margin: 6pt 0 0 31pt;
+}
+
+/* Under a gallery photo: thumbnail only */
+.ho-photos .ho-last {
+  margin-top: 4pt;
+  padding: 4pt 6pt 5pt;
+}
+
+.ho-photos .ho-last--photos {
+  grid-template-columns: 1fr auto;
+}
+
+/* Template changed since the last report: no comparison */
+.ho-banner {
+  display: flex;
+  align-items: center;
+  gap: 8pt;
+  margin: 0 0 16pt;
+  padding: 6pt 8pt;
+  border: 1pt solid #ffe7e5;
+  border-radius: var(--syn-radius-widget);
+  background: #fffcfc;
+  break-inside: avoid;
+}
+
+.ho-banner svg {
+  width: 12pt;
+  height: 12pt;
+  flex: none;
+}
+
+.ho-banner__title {
+  font-size: 7pt;
+  line-height: 8.8pt;
+  color: var(--ho-muted);
+}
+
+.ho-banner__text {
+  margin-top: 2.4pt;
+  font-family: var(--syn-font-title);
+  font-weight: 500;
+  font-size: 8pt;
+  line-height: 10pt;
+  color: var(--ho-ink);
 }
 
 /* ---------- Photos ---------------------------------------------------------------------------------- */
@@ -985,6 +1161,27 @@ img {
   height: 129.9pt;
 }
 
+.ho-photos--two {
+  grid-template-columns: repeat(2, 172.8pt);
+}
+
+.ho-field--gallery {
+  break-inside: auto;
+}
+
+.ho-field--gallery + .ho-field--gallery,
+.ho-fields + .ho-field--gallery,
+.ho-field--gallery + .ho-fields,
+.ho-group + .ho-fields,
+.ho-fields + .ho-group {
+  margin-top: 14pt;
+}
+
+.ho-field--gallery > .ho-field__label {
+  margin: 0 0 4pt var(--ho-inset);
+  break-after: avoid;
+}
+
 /* ---------- Closing page ---------------------------------------------------------------------------- */
 
 .ho-closing {
@@ -1003,56 +1200,71 @@ img {
   margin: 0 0 12.1pt 1.5pt;
 }
 
-.ho-link-rows {
-  display: flex;
-  flex-direction: column;
-  gap: 4.3pt;
-}
-
+/* A file or video field with one file and no note: label and link on the band (360 views) */
 .ho-link-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2.7pt 7.2pt 3.4pt var(--ho-inset);
+  padding: 1.3pt 1.2pt 0.5pt 0;
   text-decoration: none;
 }
 
-.ho-link-row:nth-child(even) {
-  background: var(--ho-fill);
+/* Files inside a Last Answer: icon and name, no bar */
+.ho-links--compact {
+  gap: 3pt;
+  margin: 0;
+}
+
+.ho-links--compact .ho-link {
+  height: auto;
+  padding: 0;
+  background: none;
+  justify-content: flex-start;
+}
+
+.ho-link__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 4pt;
+}
+
+.ho-file-icon {
+  width: 9pt;
+  height: 11pt;
+  flex: none;
+}
+
+.ho-links--compact .ho-link-text {
+  font-size: 8pt;
+  line-height: 10pt;
 }
 
 .ho-closing .ho-rule {
   margin: 14pt 0 19.8pt;
 }
 
-.ho-rating {
-  padding-left: 6.5pt;
-}
-
-.ho-rating__value {
-  max-width: 192pt;
-  margin-top: 1.2pt;
-  font-size: 9pt;
-  line-height: 10.9pt;
-}
-
-.ho-rating__score {
-  font-family: var(--syn-font-title);
-  font-weight: 700;
-  margin-right: 3pt;
-}
-
-.ho-rating__star {
-  display: inline-block;
-  width: 7.6pt;
-  height: 7.3pt;
-  margin-right: 3pt;
-  vertical-align: -0.6pt;
-  color: var(--ho-link);
-}
-
 .ho-closing .ho-dotted {
   margin: 41pt 0 34pt;
+}
+
+.ho-closing .ho-dotted--first {
+  margin-top: 0;
+}
+
+.ho-closing--compare {
+  padding-top: 44pt;
+}
+
+.ho-closing--compare .ho-dotted {
+  margin: 20pt 0 18pt;
+}
+
+.ho-closing--compare .ho-signers {
+  gap: 16pt;
+}
+
+.ho-closing--compare .ho-company {
+  margin-top: 24pt;
 }
 
 /* Signatures */
@@ -1119,6 +1331,7 @@ img {
 
 /* Company block */
 .ho-company {
+  break-inside: avoid;
   margin-top: 43.6pt;
   color: var(--ho-brand);
   font-size: 6pt;

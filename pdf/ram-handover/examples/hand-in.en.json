@@ -11,215 +11,304 @@
     "slogan": "syniotec Software 2025 / We synchronize you with the future!",
     "website": "syniotec.com"
   },
-  "rental": {
-    "warehouse": "Halensee Warehouse",
-    "rentalId": "RC15484BTT",
-    "companyCustomer": "Reisebüro GmbH",
-    "placeOfUse": "Bremen Roadworks",
-    "tankLevel": "65 %",
-    "tankPhoto": "../assets/photos/tank-gauge.jpg"
-  },
-  "attachments": [
+  "compare": false,
+  "tabs": [
     {
-      "note": "Scratches on front mirror",
-      "photos": [
+      "title": "Rental information",
+      "fields": [
         {
-          "src": "../assets/photos/attachment-mirror-1.jpg"
+          "type": "text",
+          "label": "Warehouse",
+          "value": "Halensee Warehouse"
         },
         {
-          "src": "../assets/photos/attachment-mirror-2.jpg"
-        }
-      ]
-    },
-    {
-      "note": "Technical check in PDF",
-      "documents": [
-        {
-          "name": "Document",
-          "date": "14.02.2020",
-          "url": "#"
+          "type": "text",
+          "label": "Rental ID",
+          "value": "RC15484BTT"
         },
         {
-          "name": "Document",
-          "date": "14.02.2020",
-          "url": "#"
-        }
-      ]
-    }
-  ],
-  "general": {
-    "uvv": "26.01.2021",
-    "workingHour": "8:00 AM"
-  },
-  "cleaning": "yes",
-  "checklists": [
-    {
-      "title": "Question group",
-      "groups": [
+          "type": "text",
+          "label": "Company/customer",
+          "value": "Reisebüro GmbH"
+        },
         {
-          "title": "Group",
-          "heading": "General",
-          "questions": [
+          "type": "text",
+          "label": "Place of use",
+          "value": "Bremen Roadworks"
+        },
+        {
+          "type": "slider",
+          "label": "Tank level",
+          "icon": "fuel",
+          "value": 65,
+          "unit": "%",
+          "photos": [
             {
-              "no": "1.1",
-              "label": "General operating licence / registration certificate",
-              "complete": "ok",
-              "condition": "no",
-              "info": "The damage always indicates the failure or impairment of a machine or technical system. Machine damage can take many forms and often has a significant impact on efficiency."
-            },
-            {
-              "no": "1.2",
-              "label": "Operating instructions",
-              "complete": "not_relevant",
-              "condition": "yes"
-            },
-            {
-              "no": "1.3",
-              "label": "Hazard assessment",
-              "complete": "failed"
-            },
-            {
-              "no": "1.4",
-              "label": "Last test certificate",
-              "complete": "ok",
-              "condition": "yes"
-            },
-            {
-              "no": "1.5",
-              "label": "Type plate / CE marking",
-              "complete": "not_relevant"
-            },
-            {
-              "no": "1.6",
-              "label": "Declaration of conformity",
-              "complete": "failed"
-            },
-            {
-              "no": "1.7",
-              "label": "Warning signs / information plates",
-              "complete": "not_relevant"
-            },
-            {
-              "no": "1.8",
-              "label": "Last test certificate",
-              "complete": "failed"
-            },
-            {
-              "no": "1.9",
-              "label": "Type plate / CE marking",
-              "complete": "not_relevant"
-            },
-            {
-              "no": "1.10",
-              "label": "Last test certificate",
-              "complete": "failed"
-            },
-            {
-              "no": "1.11",
-              "label": "Type plate / CE marking",
-              "complete": "not_relevant"
-            },
-            {
-              "no": "1.12",
-              "label": "Last test certificate",
-              "complete": "ok",
-              "condition": "yes",
-              "info": "The damage always indicates the failure or impairment of a machine or technical system. Machine damage can take many forms and often has a significant impact on efficiency."
-            },
-            {
-              "no": "1.13",
-              "label": "Type plate / CE marking",
-              "complete": "not_relevant"
+              "src": "../assets/photos/tank-gauge.jpg"
             }
           ]
         }
       ]
-    }
-  ],
-  "lightsTitle": "Lights",
-  "lights": [
-    {
-      "label": "Headlights",
-      "value": "yes"
     },
     {
-      "label": "Cabin lights",
-      "value": "no",
-      "photos": [
+      "title": "Attachments",
+      "fields": [
         {
-          "src": "../assets/photos/cabin-lights-1.jpg"
+          "type": "description",
+          "label": "Attachment 1",
+          "value": "Scratches on front mirror",
+          "photos": [
+            {
+              "src": "../assets/photos/attachment-mirror-1.jpg"
+            },
+            {
+              "src": "../assets/photos/attachment-mirror-2.jpg"
+            }
+          ]
         },
         {
-          "src": "../assets/photos/cabin-lights-2.jpg"
+          "type": "file",
+          "label": "Attachment 2",
+          "note": "Technical check in PDF",
+          "files": [
+            {
+              "name": "Document",
+              "date": "14.02.2020",
+              "url": "#"
+            },
+            {
+              "name": "Document",
+              "date": "14.02.2020",
+              "url": "#"
+            }
+          ]
         }
       ]
-    }
-  ],
-  "photos": [
-    {
-      "label": "Front view",
-      "src": "../assets/photos/front-view.jpg"
     },
     {
-      "label": "Left side 45 degrees",
-      "src": "../assets/photos/left-45.jpg"
+      "title": "General information",
+      "fields": [
+        {
+          "type": "date",
+          "label": "UVV",
+          "value": "26.01.2021"
+        },
+        {
+          "type": "time",
+          "label": "Working hour",
+          "value": "8:00 AM"
+        },
+        {
+          "type": "yesno",
+          "label": "Cleaning in order?",
+          "answer": "yes"
+        }
+      ]
     },
     {
-      "label": "Back view",
-      "src": "../assets/photos/back-view.jpg"
+      "title": "Question group",
+      "fields": [
+        {
+          "type": "group",
+          "label": "Group",
+          "heading": "General",
+          "fields": [
+            {
+              "type": "yesno",
+              "no": "1.1",
+              "label": "General operating licence / registration certificate",
+              "answer": "yes",
+              "condition": false,
+              "comment": "The damage always indicates the failure or impairment of a machine or technical system. Machine damage can take many forms and often has a significant impact on efficiency."
+            },
+            {
+              "type": "yesno",
+              "no": "1.2",
+              "label": "Operating instructions",
+              "answer": "not_relevant"
+            },
+            {
+              "type": "yesno",
+              "no": "1.3",
+              "label": "Hazard assessment",
+              "answer": "no"
+            },
+            {
+              "type": "yesno",
+              "no": "1.4",
+              "label": "Last test certificate",
+              "answer": "yes",
+              "condition": true
+            },
+            {
+              "type": "yesno",
+              "no": "1.5",
+              "label": "Type plate / CE marking",
+              "answer": "not_relevant"
+            },
+            {
+              "type": "yesno",
+              "no": "1.6",
+              "label": "Declaration of conformity",
+              "answer": "no"
+            },
+            {
+              "type": "yesno",
+              "no": "1.7",
+              "label": "Warning signs / information plates",
+              "answer": "not_relevant"
+            },
+            {
+              "type": "yesno",
+              "no": "1.8",
+              "label": "Last test certificate",
+              "answer": "no"
+            },
+            {
+              "type": "yesno",
+              "no": "1.9",
+              "label": "Type plate / CE marking",
+              "answer": "not_relevant"
+            },
+            {
+              "type": "yesno",
+              "no": "1.10",
+              "label": "Last test certificate",
+              "answer": "no"
+            },
+            {
+              "type": "yesno",
+              "no": "1.11",
+              "label": "Type plate / CE marking",
+              "answer": "not_relevant"
+            },
+            {
+              "type": "yesno",
+              "no": "1.12",
+              "label": "Last test certificate",
+              "answer": "yes",
+              "condition": true,
+              "comment": "The damage always indicates the failure or impairment of a machine or technical system. Machine damage can take many forms and often has a significant impact on efficiency.",
+              "photos": [
+                {
+                  "src": "../assets/photos/answer-cabin-light.jpg"
+                }
+              ]
+            },
+            {
+              "type": "yesno",
+              "no": "1.13",
+              "label": "Type plate / CE marking",
+              "answer": "not_relevant"
+            }
+          ]
+        }
+      ]
     },
     {
-      "label": "Right side 45 degrees",
-      "src": "../assets/photos/right-45.jpg"
+      "title": "Lights",
+      "fields": [
+        {
+          "type": "yesno",
+          "label": "Headlights",
+          "answer": "yes",
+          "condition": true
+        },
+        {
+          "type": "yesno",
+          "label": "Cabin lights",
+          "answer": "no",
+          "photos": [
+            {
+              "src": "../assets/photos/cabin-lights-1.jpg"
+            },
+            {
+              "src": "../assets/photos/cabin-lights-2.jpg"
+            }
+          ]
+        }
+      ]
     },
     {
-      "label": "Cabin",
-      "src": "../assets/photos/cabin.jpg"
+      "title": "Photos",
+      "fields": [
+        {
+          "type": "gallery",
+          "items": [
+            {
+              "label": "Front view",
+              "src": "../assets/photos/front-view.jpg"
+            },
+            {
+              "label": "Left side 45 degrees",
+              "src": "../assets/photos/left-45.jpg"
+            },
+            {
+              "label": "Back view",
+              "src": "../assets/photos/back-view.jpg"
+            },
+            {
+              "label": "Right side 45 degrees",
+              "src": "../assets/photos/right-45.jpg"
+            },
+            {
+              "label": "Cabin",
+              "src": "../assets/photos/cabin.jpg"
+            },
+            {
+              "label": "Bucket",
+              "src": "../assets/photos/bucket.jpg"
+            },
+            {
+              "label": "Other image",
+              "src": "../assets/photos/other.jpg"
+            }
+          ]
+        }
+      ]
     },
     {
-      "label": "Bucket",
-      "src": "../assets/photos/bucket.jpg"
+      "title": "360 views",
+      "closing": true,
+      "fields": [
+        {
+          "type": "video",
+          "label": "360° view exterior",
+          "files": [
+            {
+              "name": "Exterior video.mp4",
+              "url": "#",
+              "kind": "video"
+            }
+          ]
+        },
+        {
+          "type": "video",
+          "label": "360° view interior",
+          "files": [
+            {
+              "name": "Interior video.mp4",
+              "url": "#",
+              "kind": "video"
+            }
+          ]
+        }
+      ]
     },
     {
-      "label": "Other image",
-      "src": "../assets/photos/other.jpg"
-    }
-  ],
-  "views360": [
-    {
-      "label": "360° view exterior",
-      "file": "Exterior video.mp4",
-      "url": "#"
-    },
-    {
-      "label": "360° view interior",
-      "file": "Interior video.mp4",
-      "url": "#"
-    }
-  ],
-  "rating": {
-    "score": 3,
-    "max": 5,
-    "comment": "The quick brown fox jumps over the lazy dog"
-  },
-  "signatures": [
-    {
-      "role": "owner",
-      "name": "Max Mustermann",
-      "company": "GmbH Große Mode",
-      "signature": null
-    },
-    {
-      "role": "transportProvider",
-      "name": "John Doe",
-      "company": "GmbH Holidayquelle",
-      "signature": null
-    },
-    {
-      "role": "customer",
-      "name": "Max Mustermann",
-      "company": "GmbH Reisefokus",
-      "email": "max.mustermann@reisefokus.de"
+      "title": "Rating",
+      "closing": true,
+      "fields": [
+        {
+          "type": "rating",
+          "label": "Rate the equipment",
+          "value": {
+            "score": 3,
+            "max": 5
+          },
+          "comment": "The quick brown fox jumps over the lazy dog"
+        }
+      ]
     }
   ],
   "company": {
@@ -267,6 +356,26 @@
       "role": "customer",
       "name": "Max Mustermann",
       "company": "GmbH Reisefokus"
+    }
+  ],
+  "signatures": [
+    {
+      "role": "owner",
+      "name": "Max Mustermann",
+      "company": "GmbH Große Mode",
+      "signature": null
+    },
+    {
+      "role": "transportProvider",
+      "name": "John Doe",
+      "company": "GmbH Holidayquelle",
+      "signature": null
+    },
+    {
+      "role": "customer",
+      "name": "Max Mustermann",
+      "company": "GmbH Reisefokus",
+      "email": "max.mustermann@reisefokus.de"
     }
   ],
   "overview": [

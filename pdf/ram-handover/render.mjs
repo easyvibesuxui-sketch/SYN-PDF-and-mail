@@ -3,10 +3,11 @@
 //   import { renderHandover } from './render.mjs';
 //   const html = renderHandover(data, { assetBase: './' });
 //
-// `data` is described in README.md (and every file in dist/*.json is a full example). The function
-// returns one self-standing HTML document; print it with a Chromium engine to get the PDF
-// (see pdf.mjs). Sections without data are left out, so one template covers Hand out, Hand in,
-// Bulk, Without booking and the Last answer variant.
+// The report is the filled handover template: a cover (IDs, parties, booked items), the template's tabs
+// with their fields, and a closing page (signatures, company). Every field type of the template has its
+// own rendering, and when the handover was filled with "compare" on, every field is followed by its
+// Last Answer (the value from the previous report). README.md describes the data; examples/*.json are
+// complete examples. Print the HTML with a Chromium engine to get the PDF (build.mjs --pdf).
 
 import { translator } from './i18n.mjs';
 
@@ -22,68 +23,101 @@ const has = (v) => v !== undefined && v !== null && v !== '' && !(Array.isArray(
 // CSS string literal for @page margin boxes
 const cssString = (s) => `"${String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\A ')}"`;
 
-// ---------- Icons (Syn "Main icons", currentColor) ----------------------------------------------------
+// ---------- Icons (Syn "Main icons") ------------------------------------------------------------------
 
 const icon = {
-  ok: (label) =>
-    `<svg viewBox="0 0 12 12" role="img" aria-label="${esc(label)}"><circle cx="6" cy="6" r="5.3" fill="none" stroke="#151515" stroke-width="0.7"/><path d="M3.5 6.2 5.3 8l3.3-3.8" fill="none" stroke="#71c562" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-  failed: (label) =>
-    `<svg viewBox="0 0 12 12" role="img" aria-label="${esc(label)}"><circle cx="6" cy="6" r="5.3" fill="none" stroke="#151515" stroke-width="0.7"/><path d="m4.1 4.1 3.8 3.8m0-3.8L4.1 7.9" fill="none" stroke="#ffb30f" stroke-width="0.9" stroke-linecap="round"/></svg>`,
-  next: `<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6.97 17L6 16.00L12.02 10L6 3.99L6.97 3L14 10L6.97 17Z" fill="currentColor"/></svg>`,
+  yes: (label) =>
+    `<svg class="ho-status" viewBox="0 0 12 12" role="img" aria-label="${esc(label)}"><circle cx="6" cy="6" r="5.3" fill="none" stroke="#151515" stroke-width="0.7"/><path d="M3.5 6.2 5.3 8l3.3-3.8" fill="none" stroke="#71c562" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  no: (label) =>
+    `<svg class="ho-status" viewBox="0 0 12 12" role="img" aria-label="${esc(label)}"><circle cx="6" cy="6" r="5.3" fill="none" stroke="#151515" stroke-width="0.7"/><path d="m4.1 4.1 3.8 3.8m0-3.8L4.1 7.9" fill="none" stroke="#ffb30f" stroke-width="0.9" stroke-linecap="round"/></svg>`,
+  notRelevant: (label) =>
+    `<svg class="ho-status" viewBox="0 0 12 12" role="img" aria-label="${esc(label)}"><circle cx="6" cy="6" r="5.3" fill="none" stroke="#a7b0b3" stroke-width="0.7"/><path d="M3.6 6h4.8" stroke="#a7b0b3" stroke-width="0.9" stroke-linecap="round"/></svg>`,
+  next: `<svg class="ho-chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="M6.97 17L6 16.00L12.02 10L6 3.99L6.97 3L14 10L6.97 17Z" fill="currentColor"/></svg>`,
   calendar: `<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M0 1.68H20V20H0V1.68ZM18.9 2.8H1.1V18.9H18.9V2.8ZM19.6 6.5H.4V5.7H19.6V6.5ZM4.6 4.1H3.9V0H4.6V4.1ZM16.1 4.1H15.4V0H16.1V4.1Z" fill="#151515"/></svg>`,
   time: `<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 20C11.97 20 13.91 19.41 15.55 18.31 17.19 17.21 18.48 15.65 19.23 13.82 19.99 11.99 20.19 9.98 19.8 8.04 19.42 6.1 18.46 4.32 17.07 2.92 15.67 1.53 13.88.57 11.95.19 10.01-.19 7.99 0 6.17.76 4.34 1.51 2.78 2.8 1.68 4.44.58 6.08 0 8.02 0 10 0 12.65 1.05 15.19 2.93 17.06 4.8 18.94 7.34 19.99 10 20ZM10 1.25C11.73 1.25 13.42 1.76 14.86 2.72 16.29 3.68 17.42 5.05 18.08 6.65 18.74 8.25 18.91 10.01 18.58 11.7 18.24 13.4 17.41 14.96 16.18 16.18 14.96 17.41 13.4 18.24 11.7 18.58 10 18.92 8.24 18.74 6.65 18.08 5.05 17.42 3.68 16.3 2.72 14.86 1.76 13.42 1.24 11.73 1.24 10 1.25 7.68 2.17 5.45 3.81 3.81 5.45 2.17 7.68 1.25 10 1.25ZM13.41 14.29 14.29 13.41 10.62 9.74V2.99H9.37V10C9.37 10.08 9.39 10.16 9.42 10.23 9.45 10.31 9.5 10.38 9.55 10.44L13.41 14.29Z" fill="#151515"/></svg>`,
   fuel: `<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 2h9v16H3zM4.3 3.3v5h6.4v-5z" fill="#a7b0b3" fill-rule="evenodd"/><path d="M12 6.5h1.6l2.4 2.4v7.3a1.3 1.3 0 0 1-2.6 0V12H12v-1.2h2.6v5.4h.2V9.4L13.1 7.7H12z" fill="#a7b0b3"/></svg>`,
-  star: `<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1 6.9 6.92 0 7.87 5 12.48 3.81 19 10 15.92 16.18 19 15 12.48 20 7.87 13.09 6.92Z" fill="currentColor"/></svg>`,
+  star: `<svg class="ho-star" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1 6.9 6.92 0 7.87 5 12.48 3.81 19 10 15.92 16.18 19 15 12.48 20 7.87 13.09 6.92Z" fill="currentColor"/></svg>`,
+  info: `<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.6" fill="none" stroke="#151515" stroke-width="1.2"/><path d="M10 8.6v5.6" stroke="#151515" stroke-width="1.4" stroke-linecap="round"/><circle cx="10" cy="5.9" r="1" fill="#151515"/></svg>`,
+  pdf: `<svg class="ho-file-icon" viewBox="0 0 18 22" aria-hidden="true"><path d="M1 1h11l5 5v15H1z" fill="none" stroke="#fe7d00" stroke-width="1.2" stroke-linejoin="round"/><path d="M12 1v5h5" fill="none" stroke="#fe7d00" stroke-width="1.2" stroke-linejoin="round"/><text x="3" y="17.5" font-size="5.2" font-family="Montserrat, Arial, sans-serif" font-weight="700" fill="#fe7d00">PDF</text></svg>`,
+  video: `<svg class="ho-file-icon" viewBox="0 0 18 22" aria-hidden="true"><path d="M1 1h11l5 5v15H1z" fill="none" stroke="#fe7d00" stroke-width="1.2" stroke-linejoin="round"/><path d="M12 1v5h5" fill="none" stroke="#fe7d00" stroke-width="1.2" stroke-linejoin="round"/><path d="M6.5 10.5v6l5-3z" fill="#fe7d00"/></svg>`,
 };
 
-// ---------- Pieces ------------------------------------------------------------------------------------
+// Field types with a one-line value: their Last Answer sits on the title line.
+const INLINE = new Set(['text', 'number', 'count', 'date', 'time', 'dropdown', 'choice', 'switch', 'slider', 'range', 'rating', 'yesno']);
 
-function field(t, f, { filled } = {}) {
-  const label = f.labelKey ? t(f.labelKey) : f.label;
-  const ic = f.icon ? icon[f.icon] : '';
-  const photos = has(f.photos)
-    ? `<div class="ho-field__photos">${f.photos
-        .map((p) => `<img class="ho-photo" src="${esc(p.src)}" alt="${esc(p.alt ?? label)}">`)
-        .join('')}</div>`
-    : '';
-  return `<div class="ho-field${filled ? ' ho-field--filled' : ''}${photos ? ' ho-field--with-photos' : ''}">
-        <div class="ho-field__label ho-label">${esc(label)}${ic}</div>
-        ${has(f.value) ? `<div class="ho-field__value ho-value">${esc(f.value)}</div>` : ''}
-        ${photos}
-      </div>`;
+// ---------- Values ------------------------------------------------------------------------------------
+
+function yesnoHtml(t, v, { withCondition = true } = {}) {
+  if (!v || !has(v.answer)) return '';
+  const map = {
+    yes: [icon.yes(t('yes')), `<span class="ho-yes">${esc(t('yes'))}</span>`],
+    no: [icon.no(t('no')), `<span class="ho-answer-no">${esc(t('no'))}</span>`],
+    not_relevant: [icon.notRelevant(t('notRelevant')), `<span class="ho-na">${esc(t('notRelevant'))}</span>`],
+  };
+  const [ic, text] = map[v.answer] ?? ['', esc(v.answer)];
+  // Condition is asked only after a Yes
+  const condition =
+    withCondition && v.answer === 'yes' && typeof v.condition === 'boolean'
+      ? `<span class="ho-k">${esc(t('condition'))}</span><span>${esc(t(v.condition ? 'okay' : 'notOkay'))}</span>`
+      : '';
+  return `<span class="ho-yesno">${ic}${text}${condition}</span>`;
 }
 
-function fields(t, list, opts = {}) {
-  const items = list.filter((f) => has(f.value) || has(f.photos));
-  if (!items.length) return '';
-  return `<div class="ho-fields${items.length === 1 && opts.singleFilled ? ' ho-fields--single' : ''}">${items
-    .map((f) => field(t, f))
+function unitValue(v, unit) {
+  if (!has(v)) return '';
+  return `${esc(v)}${unit ? `${unit === '%' ? '' : ' '}${esc(unit)}` : ''}`;
+}
+
+// The value of a field (or of its Last Answer, which has the same shape) as inline HTML.
+function inlineValue(t, type, v) {
+  switch (type) {
+    case 'yesno':
+      return yesnoHtml(t, v);
+    case 'switch':
+      return has(v.value) ? esc(v.value === true ? t('yes') : v.value === false ? t('no') : v.value) : '';
+    case 'slider':
+      return unitValue(v.value, v.unit ?? '%');
+    case 'number':
+    case 'count':
+      return unitValue(v.value, v.unit);
+    case 'range':
+      if (!v.value) return '';
+      return `<span class="ho-range"><span class="ho-k">${esc(t('from'))}</span>${unitValue(v.value.from, v.unit ?? '%')}<span class="ho-dot" aria-hidden="true"></span><span class="ho-k">${esc(t('to'))}</span>${unitValue(v.value.to, v.unit ?? '%')}</span>`;
+    case 'rating':
+      if (!v.value) return '';
+      return `<span class="ho-rating"><span class="ho-rating__score">${esc(v.value.score)}/${esc(v.value.max ?? 5)}</span>${icon.star}</span>`;
+    default:
+      return has(v.value) ? esc(v.value) : '';
+  }
+}
+
+// Block parts that follow the value: long text, lists, files, photos.
+function blockValue(t, type, v, { compact = false } = {}) {
+  const out = [];
+  if (type === 'description' && has(v.value)) out.push(`<div class="ho-text">${esc(v.value)}</div>`);
+  if (type === 'checks' && has(v.value))
+    out.push(`<ul class="ho-checks">${v.value.map((o) => `<li>${esc(o)}</li>`).join('')}</ul>`);
+  if (type === 'switch' && has(v.helper)) out.push(`<div class="ho-helper">${esc(v.helper)}</div>`);
+  if ((type === 'file' || type === 'video') && has(v.files)) out.push(files(t, type, v.files, { compact }));
+  return out.join('');
+}
+
+function files(t, type, list, { compact }) {
+  return `<div class="ho-links${compact ? ' ho-links--compact' : ''}">${list
+    .map(
+      (f) => `<a class="ho-link" href="${esc(f.url ?? '#')}">
+          <span class="ho-link__name">${compact ? (f.kind === 'video' || type === 'video' ? icon.video : icon.pdf) : ''}<span class="ho-link-text">${esc(f.name)}${has(f.date) ? `<span class="ho-gap">${esc(f.date)}</span>` : ''}</span></span>${compact ? '' : icon.next}
+        </a>`,
+    )
     .join('')}</div>`;
 }
 
-function section(title, body, extraClass = '') {
-  if (!body) return '';
-  return `<section class="ho-section${extraClass ? ` ${extraClass}` : ''}">
-      ${title ? `<h2 class="ho-section-title">${esc(title)}</h2>` : ''}
-      ${body}
-    </section>`;
-}
-
-function joinSections(parts) {
-  return parts.filter(Boolean).join('\n    <div class="ho-rule" role="separator"></div>\n    ');
-}
-
-function statusCell(t, status) {
-  if (status === 'ok') return icon.ok(t('statusOk'));
-  if (status === 'failed') return icon.failed(t('statusFailed'));
-  if (status === 'not_relevant') return `<span class="ho-na">${esc(t('notRelevant'))}</span>`;
-  return '';
-}
-
-function answerText(t, v) {
-  if (v === 'yes') return `<span class="ho-yes">${esc(t('yes'))}</span>`;
-  if (v === 'no') return `<span class="ho-no">${esc(t('no'))}</span>`;
-  return has(v) ? esc(v) : '';
+// Big photos (ho-photo, as in the PDF's attachments) or Last Answer thumbnails (ho-thumb)
+function photos(list, cls = 'ho-photo', wrapClass = cls === 'ho-photo' ? 'ho-field__photos' : 'ho-thumbs') {
+  if (!has(list)) return '';
+  return `<div class="${wrapClass}">${list
+    .map((p) => `<img class="${cls}" src="${esc(p.src)}" alt="${esc(p.label ?? p.alt ?? '')}">`)
+    .join('')}</div>`;
 }
 
 function info(t, text) {
@@ -91,11 +125,170 @@ function info(t, text) {
   return `<div class="ho-info"><span class="ho-info__key">${esc(t('additionalInformation'))} *</span>${esc(text)}</div>`;
 }
 
+// ---------- Last Answer -------------------------------------------------------------------------------
+
+// The PDF's Last Answer card, for one field. `prev` has the same shape as the field's value
+// (value, answer, condition, files, photos, comment); null means there was no previous answer.
+function lastAnswer(t, type, prev, { row = false } = {}) {
+  const title = `<span class="ho-last__title">${esc(t('lastAnswer'))}</span>`;
+  if (!prev) {
+    return `<div class="ho-last${row ? ' ho-last--row' : ''}"><div class="ho-last__head">${title}<span class="ho-na">${esc(t('noPreviousAnswer'))}</span></div></div>`;
+  }
+  const inline = INLINE.has(type) ? inlineValue(t, type, prev) : '';
+  const block = blockValue(t, type, prev, { compact: true });
+  const ratingNote = type === 'rating' && has(prev.comment) ? `<span class="ho-rating__note">${esc(prev.comment)}</span>` : '';
+  const comment = type === 'rating' ? '' : info(t, prev.comment);
+  const thumbs = photos(prev.photos, 'ho-thumb');
+  return `<div class="ho-last${row ? ' ho-last--row' : ''}${thumbs ? ' ho-last--photos' : ''}">
+      <div class="ho-last__main">
+        <div class="ho-last__head">${title}${inline}${ratingNote}</div>
+        ${block}${comment}
+      </div>
+      ${thumbs}
+    </div>`;
+}
+
+// ---------- Fields ------------------------------------------------------------------------------------
+
+const labelIcon = { date: 'calendar', time: 'time' };
+
+function fieldBand(t, f, ctx) {
+  const ic = icon[f.icon ?? labelIcon[f.type]] ?? '';
+  // A note shown next to the label (Attachment 2  Technical check in PDF)
+  const note = has(f.note) ? ` <span class="ho-field__inline">${esc(f.note)}</span>` : '';
+  const compactFile = (f.type === 'file' || f.type === 'video') && f.files?.length === 1 && !has(f.note);
+  const inline = INLINE.has(f.type) ? inlineValue(t, f.type, f) : '';
+  const ratingNote = f.type === 'rating' && has(f.comment) ? `<span class="ho-rating__note">${esc(f.comment)}</span>` : '';
+
+  let body;
+  if (compactFile) {
+    // 360 views: label and link on the band, chevron at the end
+    const file = f.files[0];
+    body = `<a class="ho-link-row" href="${esc(file.url ?? '#')}"><span><span class="ho-label ho-block">${esc(f.label)}</span><span class="ho-link-text">${esc(file.name)}</span></span>${icon.next}</a>`;
+  } else {
+    body = `<div class="ho-field__label ho-label">${esc(f.label)}${ic}${note}</div>
+        ${inline || ratingNote ? `<div class="ho-field__value ho-value">${inline}${ratingNote}</div>` : ''}
+        ${blockValue(t, f.type, f)}`;
+  }
+
+  const big = f.type === 'image' || has(f.photos) ? photos(f.photos) : '';
+  const comment = f.type === 'rating' ? '' : info(t, f.comment);
+  const last = ctx.compare ? lastAnswer(t, f.type, f.lastAnswer ?? null) : '';
+
+  return `<div class="ho-field ho-field--${esc(f.type)}${big ? ' ho-field--with-photos' : ''}">
+        ${body}
+        ${big}${comment}${last}
+      </div>`;
+}
+
+// Gallery and AI: labelled photos in a grid (3 or 2 columns), each with its own Last Answer.
+function gallery(t, f, ctx) {
+  const items = f.items ?? [];
+  if (!items.length) return '';
+  return `<div class="ho-field ho-field--gallery ho-field--${esc(f.type)}">
+      ${has(f.label) ? `<div class="ho-field__label ho-label">${esc(f.label)}</div>` : ''}
+      <div class="ho-photos${f.type === 'ai' ? ' ho-photos--two' : ''}">${items
+        .map(
+          (p) => `<figure>
+          <figcaption class="ho-label">${esc(p.label)}</figcaption>
+          <img class="ho-photo" src="${esc(p.src)}" alt="${esc(p.label)}">
+          ${
+            ctx.compare
+              ? lastAnswer(t, 'image', p.lastAnswer === undefined ? null : p.lastAnswer && { photos: [{ src: p.lastAnswer.src }] })
+              : ''
+          }
+        </figure>`,
+        )
+        .join('')}</div>
+    </div>`;
+}
+
+// Group: the checklist (question / Complete / Condition OK?), each question with its Last Answer.
+function group(t, f, ctx) {
+  const rows = (f.fields ?? [])
+    .map((q) => {
+      const isYesNo = q.type === 'yesno' || q.type === undefined;
+      const type = q.type ?? 'yesno';
+      // As in the PDF: Complete shows the icon for Yes and No, the words for Not relevant
+      const complete = isYesNo
+        ? q.answer === 'yes'
+          ? icon.yes(t('yes'))
+          : q.answer === 'no'
+            ? icon.no(t('no'))
+            : q.answer === 'not_relevant'
+              ? `<span class="ho-na">${esc(t('notRelevant'))}</span>`
+              : ''
+        : inlineValue(t, type, q) || blockValue(t, type, q, { compact: true });
+      const condition =
+        isYesNo && q.answer === 'yes' && typeof q.condition === 'boolean'
+          ? q.condition
+            ? `<span class="ho-yes">${esc(t('yes'))}</span>`
+            : `<span class="ho-no">${esc(t('no'))}</span>`
+          : '';
+      return `<div class="ho-q">
+            <div class="ho-q__main">
+              <div class="ho-q__text">${esc([q.no, q.label].filter(has).join(' '))}</div>
+              <div class="ho-q__complete">${complete}</div>
+              <div class="ho-q__condition">${condition}</div>
+            </div>
+            ${info(t, q.comment)}
+            ${photos(q.photos, 'ho-thumb', 'ho-thumbs ho-q__photos')}
+            ${ctx.compare ? lastAnswer(t, type, q.lastAnswer ?? null, { row: true }) : ''}
+          </div>`;
+    })
+    .join('');
+  return `<div class="ho-group">
+      ${has(f.label) ? `<h3 class="ho-subtitle">${esc(f.label)}</h3>` : ''}
+      <div class="ho-check">
+        <div class="ho-check__head">
+          <div class="ho-label">${esc(f.heading ?? '')}</div>
+          <div class="ho-label">${esc(t('complete'))}</div>
+          <div class="ho-label">${esc(t('conditionOk'))}</div>
+        </div>
+        <div class="ho-check__rows">${rows}</div>
+      </div>
+    </div>`;
+}
+
+// A tab's fields: runs of simple fields become a zebra-striped list, groups and galleries stand alone.
+function tabBody(t, tab, ctx) {
+  const out = [];
+  let run = [];
+  const flush = () => {
+    if (run.length) out.push(`<div class="ho-fields">${run.join('')}</div>`);
+    run = [];
+  };
+  for (const f of tab.fields ?? []) {
+    if (f.type === 'group') {
+      flush();
+      out.push(group(t, f, ctx));
+    } else if (f.type === 'gallery' || f.type === 'ai') {
+      flush();
+      out.push(gallery(t, f, ctx));
+    } else {
+      run.push(fieldBand(t, f, ctx));
+    }
+  }
+  flush();
+  return out.join('');
+}
+
+function tabSection(t, tab, ctx, prefix = '') {
+  const spaced = (tab.fields ?? []).some((f) => f.type === 'group' || f.type === 'gallery' || f.type === 'ai');
+  return `<section class="ho-section${spaced ? ' ho-section--spaced' : ''}">
+      ${prefix}
+      ${has(tab.title) ? `<h2 class="ho-section-title">${esc(tab.title)}</h2>` : ''}
+      ${tabBody(t, tab, ctx)}
+    </section>`;
+}
+
+const rule = '\n    <div class="ho-rule" role="separator"></div>\n    ';
+
 // ---------- Cover -------------------------------------------------------------------------------------
 
 function cover(t, d, a) {
   const compact = has(d.constructionSite) || has(d.equipment);
-  const parties = (d.parties ?? []).filter((p) => p.role !== undefined);
+  const parties = d.parties ?? [];
 
   const partyCols = parties
     .map((p) => {
@@ -197,7 +390,7 @@ function cover(t, d, a) {
         : ''
     }
     <div class="ho-cover__lower">
-      ${parties.length ? `<div class="ho-parties">${partyCols}</div>` : ''}
+      ${parties.length ? `<div class="ho-parties${parties.length === 2 ? ' ho-parties--two' : ''}">${partyCols}</div>` : ''}
       ${site}
       <div class="ho-hairline ho-cover__divider${compact ? ' ho-hairline--single' : ''}"></div>
       ${equipment}
@@ -212,7 +405,10 @@ function cover(t, d, a) {
 function operatingHours(t, d) {
   if (!has(d.operatingHours)) return '';
   if (d.operatingHours.length === 1 && !d.operatingHours[0].equipment) {
-    return fields(t, [{ labelKey: 'operatingHours', value: d.operatingHours[0].hours }], { singleFilled: true });
+    return `<div class="ho-fields"><div class="ho-field ho-field--filled">
+        <div class="ho-field__label ho-label">${esc(t('operatingHours'))}</div>
+        <div class="ho-field__value ho-value">${esc(d.operatingHours[0].hours)}</div>
+      </div></div>`;
   }
   return `<div class="ho-hours">${d.operatingHours
     .map(
@@ -225,152 +421,21 @@ function operatingHours(t, d) {
     .join('')}</div>`;
 }
 
-function rental(t, d) {
-  const r = d.rental;
-  if (!r) return '';
-  const list = [
-    { labelKey: 'warehouse', value: r.warehouse },
-    { labelKey: 'rentalId', value: r.rentalId },
-    { labelKey: 'companyCustomer', value: r.companyCustomer },
-    { labelKey: 'placeOfUse', value: r.placeOfUse },
-    { labelKey: 'tankLevel', value: r.tankLevel, icon: 'fuel', photos: r.tankPhoto ? [{ src: r.tankPhoto }] : [] },
-  ];
-  return fields(t, list);
+function banner(t, d) {
+  if (!d.compare || d.comparable !== false) return '';
+  return `<div class="ho-banner" role="note">
+      ${icon.info}
+      <div><div class="ho-banner__title">${esc(d.notComparableReason ?? t('notComparableTitle'))}</div><div class="ho-banner__text">${esc(t('notComparable'))}</div></div>
+    </div>`;
 }
 
-function attachments(t, d) {
-  if (!has(d.attachments)) return '';
-  return `<div class="ho-fields">${d.attachments
-    .map((att, i) => {
-      const n = i + 1;
-      const docs = has(att.documents)
-        ? `<div class="ho-links">${att.documents
-            .map(
-              (doc) => `<a class="ho-link" href="${esc(doc.url ?? '#')}">
-              <span class="ho-link-text">${esc(doc.name ?? t('document'))}<span class="ho-gap">${esc(doc.date ?? '')}</span></span>${icon.next}
-            </a>`,
-            )
-            .join('')}</div>`
-        : '';
-      const photos = has(att.photos)
-        ? `<div class="ho-field__photos">${att.photos
-            .map((p) => `<img class="ho-photo" src="${esc(p.src)}" alt="${esc(p.alt ?? att.note ?? '')}">`)
-            .join('')}</div>`
-        : '';
-      return `<div class="ho-field${photos ? ' ho-field--with-photos' : ''}">
-          <div class="ho-field__label ho-label">${esc(att.title ?? `${t('attachment')} ${n}`)}${
-            docs && has(att.note) ? ` <span class="ho-field__inline">${esc(att.note)}</span>` : ''
-          }</div>
-          ${!docs && has(att.note) ? `<div class="ho-field__value ho-value">${esc(att.note)}</div>` : ''}
-          ${photos}${docs}
-        </div>`;
-    })
-    .join('')}</div>`;
-}
-
-function general(t, d) {
-  const g = d.general;
-  if (!g) return '';
-  return fields(t, [
-    { labelKey: 'uvv', value: g.uvv, icon: 'calendar' },
-    { labelKey: 'workingHour', value: g.workingHour, icon: 'time' },
-  ]);
-}
-
-function checklists(t, d) {
-  if (!has(d.checklists)) return [];
-  return d.checklists.map((cl) => {
-    const groups = (cl.groups ?? [])
-      .map((g) => {
-        const rows = (g.questions ?? [])
-          .map(
-            (q) => `<div class="ho-q">
-            <div class="ho-q__main">
-              <div class="ho-q__text">${esc([q.no, q.label].filter(has).join(' '))}</div>
-              <div class="ho-q__complete">${statusCell(t, q.complete)}</div>
-              <div class="ho-q__condition">${answerText(t, q.condition)}</div>
-            </div>
-            ${info(t, q.info)}
-          </div>`,
-          )
-          .join('');
-        const answers = has(g.lastAnswers)
-          ? `<div class="ho-answers">
-            <div class="ho-answers__title">${esc(t('lastAnswer'))}</div>
-            ${g.lastAnswers
-              .map(
-                (an) => `<div class="ho-answer">
-              <div>
-                <div class="ho-answer__q">${esc([an.no, an.label].filter(has).join(' '))} ${statusCell(t, an.complete)} ${answerText(t, an.condition)}</div>
-                ${info(t, an.info)}
-              </div>
-              ${an.photo ? `<img class="ho-answer__photo" src="${esc(an.photo)}" alt="">` : '<div></div>'}
-            </div>`,
-              )
-              .join('')}
-          </div>`
-          : '';
-        return `${has(g.title) ? `<h3 class="ho-subtitle">${esc(g.title)}</h3>` : ''}
-          <div class="ho-check">
-            <div class="ho-check__head">
-              <div class="ho-label">${esc(g.heading ?? '')}</div>
-              <div class="ho-label">${esc(t('complete'))}</div>
-              <div class="ho-label">${esc(t('conditionOk'))}</div>
-            </div>
-            <div class="ho-check__rows">${rows}</div>
-            ${answers}
-          </div>`;
-      })
-      .join('');
-    return section(cl.title, groups, 'ho-section--spaced');
-  });
-}
-
-function lights(t, d) {
-  if (!has(d.lights)) return '';
-  return fields(
-    t,
-    d.lights.map((l) => ({ label: l.label, value: answerPlain(t, l.value), photos: l.photos })),
-  );
-}
-
-function answerPlain(t, v) {
-  if (v === 'yes') return t('yes');
-  if (v === 'no') return t('no');
-  return v;
-}
-
-function photos(t, d) {
-  if (!has(d.photos)) return '';
-  return `<div class="ho-photos">${d.photos
-    .map(
-      (p) => `<figure>
-        <figcaption class="ho-label">${esc(p.label)}</figcaption>
-        <img class="ho-photo" src="${esc(p.src)}" alt="${esc(p.label)}">
-      </figure>`,
-    )
-    .join('')}</div>`;
-}
-
-function body(t, d, a) {
-  // Operating hours (Bulk, Without booking) sit above Rental information, in the same section.
+function body(t, d, a, tabs, ctx) {
   const hours = operatingHours(t, d);
-  const rentalFields = rental(t, d);
-  const parts = [
-    hours || rentalFields
-      ? `<section class="ho-section">${hours ? `<div class="ho-hours-block">${hours}</div>` : ''}${
-          rentalFields ? `<h2 class="ho-section-title">${esc(t('rentalInformation'))}</h2>${rentalFields}` : ''
-        }</section>`
-      : '',
-    section(t('attachments'), attachments(t, d)),
-    section(t('generalInformation'), general(t, d)),
-    has(d.cleaning)
-      ? section('', fields(t, [{ labelKey: 'cleaningInOrder', value: answerPlain(t, d.cleaning) }], { singleFilled: true }))
-      : '',
-    ...checklists(t, d),
-    section(d.lightsTitle ?? 'Lights', lights(t, d), 'ho-section--spaced'),
-    section(t('photos'), photos(t, d), 'ho-section--spaced'),
-  ];
+  const parts = tabs.map((tab, i) =>
+    tabSection(t, tab, ctx, i === 0 ? `${banner(t, d)}${hours ? `<div class="ho-hours-block">${hours}</div>` : ''}` : ''),
+  );
+  if (!parts.length && (hours || banner(t, d))) parts.push(`<section class="ho-section">${banner(t, d)}${hours}</section>`);
+  if (!parts.length) return '';
 
   return `<section class="ho-body">
     <table class="ho-body__frame" role="presentation">
@@ -382,7 +447,7 @@ function body(t, d, a) {
       </td></tr></thead>
       <tbody><tr><td>
         <div class="ho-content">
-    ${joinSections(parts)}
+    ${parts.join(rule)}
         </div>
       </td></tr></tbody>
     </table>
@@ -391,31 +456,8 @@ function body(t, d, a) {
 
 // ---------- Closing page ------------------------------------------------------------------------------
 
-function closing(t, d, a) {
-  const views = has(d.views360)
-    ? section(
-        t('views360'),
-        `<div class="ho-link-rows">${d.views360
-          .map(
-            (v) => `<a class="ho-link-row" href="${esc(v.url ?? '#')}">
-            <span><span class="ho-label ho-block">${esc(v.label)}</span><span class="ho-link-text">${esc(v.file)}</span></span>${icon.next}
-          </a>`,
-          )
-          .join('')}</div>`,
-      )
-    : '';
-
-  const rating = d.rating
-    ? section(
-        t('rating'),
-        `<div class="ho-rating">
-          <div class="ho-label">${esc(t('rateEquipment'))}</div>
-          <div class="ho-rating__value"><span class="ho-rating__score">${esc(d.rating.score)}/${esc(d.rating.max ?? 5)}</span><svg class="ho-rating__star" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1 6.9 6.92 0 7.87 5 12.48 3.81 19 10 15.92 16.18 19 15 12.48 20 7.87 13.09 6.92Z" fill="currentColor"/></svg><span>${esc(d.rating.comment ?? '')}</span></div>
-        </div>`,
-      )
-    : '';
-
-  const top = [views, rating].filter(Boolean).join('<div class="ho-rule" role="separator"></div>');
+function closing(t, d, a, tabs, ctx) {
+  const top = tabs.map((tab) => tabSection(t, tab, ctx)).join('<div class="ho-rule" role="separator"></div>');
 
   const signers = has(d.signatures)
     ? `<div class="ho-signers">${d.signatures
@@ -457,9 +499,10 @@ function closing(t, d, a) {
       </div>`
     : '';
 
-  return `<section class="ho-closing">
+  // With Last Answers the closing tabs grow; tighter spacing keeps signatures and company on one page.
+  return `<section class="ho-closing${ctx.compare && top ? ' ho-closing--compare' : ''}">
     ${top}
-    ${signers ? '<div class="ho-dotted" role="separator"></div>' : ''}
+    ${signers ? `<div class="ho-dotted${top ? '' : ' ho-dotted--first'}" role="separator"></div>` : ''}
     ${signers}
     ${company}
   </section>`;
@@ -470,24 +513,31 @@ function closing(t, d, a) {
 export function renderHandover(data, { assetBase = './', inlineCss = null } = {}) {
   const t = translator(data.lang);
   const a = assetBase;
+  // Last answers show only when the handover was filled with compare on and the template did not change.
+  const ctx = { compare: Boolean(data.compare) && data.comparable !== false };
+  const tabs = data.tabs ?? [];
+  const bodyTabs = tabs.filter((tab) => !tab.closing);
+  const closingTabs = tabs.filter((tab) => tab.closing);
+
   const footer = [data.footer?.slogan, data.footer?.website].filter(has).join('\n');
   // Inline CSS: point its font URLs at assetBase, as the linked stylesheet would resolve them.
   const css = inlineCss
     ? `<style>\n${inlineCss.replace(/url\('fonts\//g, `url('${a}fonts/`)}\n</style>`
     : `<link rel="stylesheet" href="${a}handover.css">`;
+
   return `<!doctype html>
 <html lang="${esc(data.lang ?? 'en')}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(t('handoverReport'))} ${esc(data.handoverId ?? data.contractId ?? '')}</title>
+<title>${esc(t('handoverReport'))} ${esc(data.handoverId || data.contractId || '')}</title>
 ${css}
 <style>@page body { @bottom-left { content: ${cssString(footer)}; } }</style>
 </head>
 <body>
   ${cover(t, data, a)}
-  ${body(t, data, a)}
-  ${closing(t, data, a)}
+  ${body(t, data, a, bodyTabs, ctx)}
+  ${closing(t, data, a, closingTabs, ctx)}
 </body>
 </html>
 `;

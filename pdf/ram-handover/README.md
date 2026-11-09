@@ -1,31 +1,135 @@
 # RAM Handover Report
 
-The handover protocol RAM produces when equipment is handed out to a customer or handed back in. This is the
-InDesign layout (*Handover Protocol Hand out*, *Hand in*, *Hand in only equipment*, *Bulk*, *Without Booking*,
-*Last answer*) rebuilt as HTML, with Syn's colours and fonts, in English and German.
+The handover protocol RAM produces when equipment is handed out to a customer or handed back in. On site
+the handover template is filled in, everyone signs, and the report is generated: this folder is that report,
+rebuilt as HTML from the InDesign layouts (*Hand out*, *Hand in*, *Hand in only equipment*, *Bulk*, *Without
+Booking*, *Last answer*), with Syn's colours and fonts, in English and German.
 
-One template covers every variant: a section with no data is left out.
+Handover is RAM only.
 
-| Variant | Example | What changes |
-| --- | --- | --- |
-| Hand out | `examples/hand-out.*` | Owner, Transport Provider, Customer; inventory as Total / Delivered |
-| Hand in | `examples/hand-in.*` | Inventory as Total / Returned / Remaining / Lost/Damaged |
-| Hand in, only equipment | `examples/hand-in-equipment.*` | One booking row, no inventory |
-| Hand in, last answer | `examples/hand-in-last-answer.*` | The previous handover's answers in a card under the checklist |
-| Bulk | `examples/bulk.*` | Rental Company and Customer with addresses, Construction Site, an equipment details strip, operating hours per piece of equipment |
-| Without booking | `examples/without-booking.*` | An equipment card instead of the booking overview |
+## What the report holds
 
-Each example is there as `.html` (open it in a browser), `.json` (the data that made it) and `.pdf` (printed
-with Chromium), in `en` and `de`.
+1. **Cover**: date, logo, Handover ID, Contract ID, Type (Hand Out / Hand In), the people at the handover,
+   the booked items and inventory counts (or the equipment card for a handover without booking).
+2. **Body**: the template's **tabs**, each with its **fields**, under a running header (logo, "Handover Report
+   ID", date) with the footer (slogan, website, page number from 1).
+3. **Closing page**: tabs marked `closing` (360° views and Rating in the reference), the signatures and the
+   company details.
 
-## Pages
+**Two or three people.** With a transport provider in between, three people take part and sign (Rental
+Company or Owner, Transport Provider, Customer); without one, two (Rental Company, Customer). The cover and
+the signatures follow the `parties` and `signatures` lists.
 
-1. **Cover**: date, logo, Handover ID, Contract ID, Type, the parties, the booking overview and inventory
-   counts (or the equipment card).
-2. **Body** (as many pages as it needs), with the running header (logo, "Handover Report ID", date) and the
-   footer (slogan, website, page number from 1): operating hours, Rental information, Attachments, General
-   information, Cleaning, the question groups, Lights, Photos.
-3. **Closing page**: 360° views, Rating, the signatures and the company details.
+**Compare (Last Answer).** When the template was filled with compare on (`compare: true`), every field is
+followed by the PDF's *Last Answer* card with the value from the previous report: short values on the
+card's title line, long text, lists, files and comments under it, photos as thumbnails on the right, and in
+galleries one card per photo. A field without a previous value says "No previous answer". When the template
+changed since the last report (`comparable: false`), the body starts with the *Not comparable* banner and no
+Last Answers are shown.
+
+## Examples
+
+`examples/` has every variant as `.html` (open in a browser), `.json` (the data that made it) and `.pdf`
+(printed with Chromium), in `en` and `de`.
+
+| Example | Shows |
+| --- | --- |
+| `hand-out` | Hand out with a transport provider (3 people); inventory as Total / Delivered |
+| `hand-out-direct` | Hand out without a transport provider (2 people) |
+| `hand-in` | Hand in, 3 people; inventory as Total / Returned / Remaining / Lost/Damaged |
+| `hand-in-direct` | Hand in of one piece of equipment, 2 people |
+| `hand-in-compare` | Hand in filled with compare on: a Last Answer after every field |
+| `hand-in-not-comparable` | Compare on, but the template changed: the Not comparable banner |
+| `bulk` | Several pieces of equipment, Construction Site, the equipment details strip, operating hours per piece |
+| `without-booking` | The equipment card instead of the booking overview |
+| `field-types` | Every field type of the template, each with its Last Answer |
+
+## Field types
+
+Every field has a `type` and a `label`; every field may also have `photos` (printed large, as in the PDF's
+attachments), a `comment` ("Additional information"), and, when compare is on, a `lastAnswer` holding the
+previous values in the same keys.
+
+| `type` | Template field | Value keys | Printed as |
+| --- | --- | --- | --- |
+| `text` | Input | `value` | Value under the label |
+| `number`, `count` | Number, Count | `value`, `unit` | Value |
+| `date` | Date | `value` (formatted) | Calendar icon on the label |
+| `time` | Time | `value` (formatted) | Clock icon on the label |
+| `dropdown`, `choice` | Dropdown, Chooser | `value` | Value |
+| `switch` | Switcher | `value` (true / false / text), `helper` | Yes / No and the helper text |
+| `slider` | Slider | `value`, `unit` (default %) | "65%" |
+| `range` | Range | `value: { from, to }`, `unit` | "From 10% • To 50%" |
+| `rating` | Rating | `value: { score, max }`, `comment` | "3/5 ★" and the comment |
+| `description` | Text area | `value` | Text, line breaks kept |
+| `checks` | Multi-select | `value: [ … ]` | One option per line |
+| `yesno` | Yes / No / Not relevant | `answer: 'yes' \| 'no' \| 'not_relevant'`, `condition` (true / false, only after Yes) | Tick, cross or dash, and "Condition Okay / Not okay" |
+| `image` | Image | `photos` | The photo |
+| `file`, `video` | File, 360° video | `files: [ { name, date, url } ]`, `note` | Amber links with a chevron; one file without a note sits on the band (360 views) |
+| `gallery`, `ai` | Gallery, AI | `items: [ { label, src, lastAnswer: { src } \| null } ]` | Labelled photos, 3 (gallery) or 2 (AI) per row |
+| `group` | Group | `heading`, `fields: [ … ]` (`no` per question) | The checklist: question · Complete · Condition/function OK?, a Last Answer under each question |
+
+Yes / No follows the app: three buttons. **Yes** asks *Condition is OKAY* and takes additional information
+and photos, **No** takes additional information and photos, **Not relevant** takes nothing. In the checklist
+the *Complete* column shows the tick or cross (or "Not relevant") and *Condition/function OK?* shows Yes or
+No only after a Yes.
+
+Simple fields of a tab are printed as bands, every second one filled (Cultured); groups and galleries stand
+on their own.
+
+## Data
+
+`examples/*.json` are complete examples.
+
+```jsonc
+{
+  "lang": "en",                         // "en" or "de": the fixed labels (i18n.mjs)
+  "type": "hand_out",                   // "hand_out" | "hand_in"
+  "createdAt": "20 May 2025, 11:00 (Europe/Berlin)",   // formatted by the backend
+  "handoverId": "RC15484BTT",
+  "contractId": "RC15484BTT",
+  "brand": { "name": "syniotec", "logo": "syniotec-logo.svg" },   // file in assets/
+  "footer": { "slogan": "…", "website": "syniotec.com" },
+
+  "compare": true,                      // filled with compare on: Last Answers after every field
+  "comparable": false,                  // template changed: banner, no Last Answers
+  "notComparableReason": "…",           // optional banner title
+
+  "parties": [ { "role": "rentalCompany" | "owner" | "transportProvider" | "customer",
+                 "name": "…", "company": "…", "address": "…" } ],
+  "constructionSite": "Bremen Roadworks",   // present: compact cover (Bulk, Without booking)
+  "overview": [ { "no": 1, "product": "…", "name": "…", "bookingDates": "…", "quantity": 1,
+                  "details": { "id": "…", "category": "…", "subtitle": "…", "serialNumber": "…" } } ],
+  "equipment": { "title": "…", "id": "…", "category": "…", "subtitle": "…", "serialNumber": "…" },
+  "inventory": [ { "name": "Fences", "total": 100, "delivered": 98 } ],                      // hand out
+  //           [ { "name": "Fences", "total": 100, "returned": 98, "remaining": 0, "lostDamaged": 2 } ]  // hand in
+  "operatingHours": [ { "no": 1, "equipment": "Volvo F504", "hours": "45 h" } ],
+
+  "tabs": [
+    { "title": "Rental information",
+      "fields": [
+        { "type": "text", "label": "Warehouse", "value": "Halensee Warehouse",
+          "lastAnswer": { "value": "Halensee Warehouse" } },
+        { "type": "slider", "label": "Tank level", "icon": "fuel", "value": 65, "unit": "%",
+          "photos": [ { "src": "url" } ], "lastAnswer": { "value": 90, "photos": [ { "src": "url" } ] } }
+      ] },
+    { "title": "Question group",
+      "fields": [ { "type": "group", "label": "Group", "heading": "General", "fields": [
+        { "type": "yesno", "no": "1.1", "label": "…", "answer": "yes", "condition": false,
+          "comment": "…", "lastAnswer": { "answer": "yes", "condition": true, "photos": [ … ] } } ] } ] },
+    { "title": "360 views", "closing": true, "fields": [ … ] }
+  ],
+
+  "signatures": [ { "role": "rentalCompany", "name": "…", "company": "…", "signature": "url or null" },
+                  { "role": "customer", "name": "…", "company": "…", "email": "…", "signedAt": "…" } ],
+  "company": { "name": "syniotec", "brandLine": "A brand of Sharemac GmbH",
+               "columns": [ [ "Address: …" ], [ "T …" ], [ "VAT ID: …" ], [ "Bank: …" ] ],
+               "management": "…", "termsTitle": "…", "terms": "…" }
+}
+```
+
+Tab titles, field labels and values come in the report's language; only the fixed labels (Handover Report,
+Contract ID, Complete, Yes / No, Last Answer …) are translated by the template.
 
 ## Build
 
@@ -46,89 +150,22 @@ await page.setContent(html, { waitUntil: 'networkidle' });
 await page.pdf({ preferCSSPageSize: true, printBackground: true });
 ```
 
-`assetBase` is where `handover.css`, `fonts/` and `assets/` are served from. With
-`inlineCss: <the CSS text>` the stylesheet goes inside the HTML instead (fonts and logo still load from
-`assetBase`). Photo and signature URLs in the data are used as they are.
+`assetBase` is where `handover.css`, `fonts/` and `assets/` are served from; `inlineCss: <the CSS text>` puts
+the stylesheet inside the HTML instead. Photo, file and signature URLs in the data are used as they are.
 
 **The print engine must be Chromium.** The template uses named pages, `@page` margin boxes for the footer and
-page number, and a table header that repeats on every page. wkhtmltopdf does not support these.
-
-## Data
-
-`examples/*.json` are complete examples. Every field is optional unless marked.
-
-```jsonc
-{
-  "lang": "en",                         // "en" or "de": fixed labels come from i18n.mjs
-  "type": "hand_out",                   // "hand_out" | "hand_in"
-  "createdAt": "20 May 2025, 11:00 (Europe/Berlin)",   // already formatted by the backend
-  "handoverId": "RC15484BTT",
-  "contractId": "RC15484BTT",
-  "brand": { "name": "syniotec", "logo": "syniotec-logo.svg" },     // file in assets/
-  "footer": { "slogan": "…", "website": "syniotec.com" },
-
-  "parties": [                          // cover; 2 or 3 columns
-    { "role": "owner" | "rentalCompany" | "transportProvider" | "customer",
-      "name": "Max Mustermann", "company": "GmbH Große Mode", "address": "28195 Bremen, Germany" }
-  ],
-  "constructionSite": "Bremen Roadworks",   // present → compact cover (Bulk, Without booking)
-
-  "overview": [ { "no": 1, "product": "Crawler excavator", "name": "Volvo F504",
-                  "bookingDates": "01.01.2028 14:42 – 02.02.2029 16:48", "quantity": 1,
-                  "details": { "id": "…", "category": "…", "subtitle": "…", "serialNumber": "…" } } ],
-  "equipment": { "title": "Volvo 2019 F507", "id": "…", "category": "…", "subtitle": "…", "serialNumber": "…" },
-  "inventory": [ { "name": "Fences", "total": 100, "delivered": 98 } ],            // hand out
-  //           [ { "name": "Fences", "total": 100, "returned": 98, "remaining": 0, "lostDamaged": 2 } ]  // hand in
-
-  "operatingHours": [ { "no": 1, "equipment": "Volvo F504", "hours": "45 h" } ],  // one entry without
-                                                                                   // "equipment": a single field
-  "rental": { "warehouse": "…", "rentalId": "…", "companyCustomer": "…", "placeOfUse": "…",
-              "tankLevel": "65 %", "tankPhoto": "url" },
-  "attachments": [ { "title": "optional, default 'Attachment n'", "note": "…",
-                     "photos": [ { "src": "url" } ],
-                     "documents": [ { "name": "Document", "date": "14.02.2020", "url": "…" } ] } ],
-  "general": { "uvv": "26.01.2021", "workingHour": "8:00 AM" },
-  "cleaning": "yes" | "no",
-
-  "checklists": [ { "title": "Question group",
-    "groups": [ { "title": "Group", "heading": "General",
-      "questions": [ { "no": "1.1", "label": "…",
-                       "complete": "ok" | "failed" | "not_relevant",
-                       "condition": "yes" | "no",
-                       "info": "additional information" } ],
-      "lastAnswers": [ { "no": "1.2", "label": "…", "complete": "ok", "condition": "yes",
-                         "info": "…", "photo": "url" } ] } ] } ],
-
-  "lightsTitle": "Lights",
-  "lights": [ { "label": "Headlights", "value": "yes" },
-              { "label": "Cabin lights", "value": "no", "photos": [ { "src": "url" } ] } ],
-  "photos": [ { "label": "Front view", "src": "url" } ],
-
-  "views360": [ { "label": "360° view exterior", "file": "Exterior video.mp4", "url": "…" } ],
-  "rating": { "score": 3, "max": 5, "comment": "…" },
-  "signatures": [ { "role": "rentalCompany", "name": "…", "company": "…", "signature": "url or null" },
-                  { "role": "customer", "name": "…", "company": "…", "email": "…", "signedAt": "…" } ],
-  "company": { "name": "syniotec", "brandLine": "A brand of Sharemac GmbH",
-               "columns": [ ["Address: …", "City: …"], ["T …"], ["VAT ID: …"], ["Bank: …"] ],
-               "management": "Management: …", "termsTitle": "Terms and conditions", "terms": "…" }
-}
-```
-
-Checklist questions, photo captions, light names and other values come in the report's language with the
-data; only the fixed labels (Handover Report, Contract ID, Warehouse, Complete, Yes/No …) are translated by
-the template.
+page number, and a table header that repeats on every page; wkhtmltopdf does not support these.
 
 ## Design
 
-- Every length is in pt and was measured from the InDesign PDFs, so the pages can be checked against them
-  1:1. The page is A4 with 10 mm side margins.
-- Colours are Syn tokens: Candy Apple for labels and the type, Jet for the cover text, Eerie Black for values,
-  Silver Chalice for muted text and hairlines, Cultured for the alternating bands, Amber for document and video
-  links, Mantis and Honey in the checklist status icons (the PDFs' `#41ad49` green is now Mantis).
-- Fonts are Syn's: **ABC Favorit Expanded** for titles and labels (where the PDFs used ABC Favorit
-  Extended/Expanded) and **Montserrat** for values (where they used Myriad Pro). Montserrat runs wider than
-  Myriad, so a few lines wrap differently and some blocks sit a few points lower or higher.
+- The layout is the *Last answer* PDF, measured in pt, so pages can be checked against it 1:1: A4, 10 mm
+  side margins, the same type sizes, bands, rules and photo sizes.
+- Syn colours: Candy Apple labels and type, Jet cover text, Eerie Black values, Silver Chalice for muted
+  text, hairlines and the Last Answer card, Cultured bands, Amber links, Mantis and Honey in the status icons.
+- Syn fonts: **ABC Favorit Expanded** for titles and labels, **Montserrat** for values (the PDFs' Myriad
+  Pro). Montserrat runs wider, so a few lines wrap differently.
 - The logo is the syniotec wordmark taken from the PDFs as vector (`assets/syniotec-logo.svg`).
+- With compare on, the closing page's spacing tightens so signatures and company details stay on one page.
 
 ### ABC Favorit Expanded
 
@@ -138,25 +175,24 @@ server). Until then titles and labels fall back to Montserrat, which is how the 
 
 ### Corrected from the PDFs
 
-- Dummy text typos: Softvares, Eurpe/Bremen, Additioanl, excavaror, Craweler, Adress, Managment,
-  Deutshe bank, GMBH, the date "02.022.2029", the time "14:86", the postcode "0177447".
-- One date format everywhere, and the cover and header show the same date.
-- German and English are no longer mixed in one report ("Einsatzort", "Vollständig", "Raupenbagger" in the
-  English one).
-- The checklist's repeated numbers (1.8, 1.9 three times) run 1.1 to 1.13.
-- The Bulk cover, a Hand out, showed the Hand in columns (Returned, Lost/Damaged); a Hand out now always shows
-  Total / Delivered.
-- Text cut off on the closing page of Bulk and Without Booking ("Max Muster-") now fits.
-- Hand in counts read Returned 0, Remaining 98; the example uses Returned 98, Remaining 0, Lost/Damaged 2.
+- Dummy text typos (Softvares, Eurpe/Bremen, Additioanl, excavaror, Craweler, Adress, Managment, Deutshe
+  bank, GMBH), the date "02.022.2029", the time "14:86", the postcode "0177447".
+- One date format, and the cover and header show the same date.
+- No German labels in the English report (Einsatzort, Vollständig, Raupenbagger).
+- The checklist numbers run 1.1 to 1.13 instead of repeating 1.8 and 1.9.
+- Condition is printed only after a Yes (the PDF had it after Not Relevant).
+- A Hand out shows Total / Delivered; the Bulk PDF, a Hand out, had the Hand in columns.
+- Text cut off on the closing page of Bulk and Without Booking ("Max Muster-") fits.
+- The Last Answer is a card after every field, not one block at the end of the checklist.
 
 ## Files
 
 | File | What |
 | --- | --- |
-| `render.mjs` | `renderHandover(data, options)` → HTML |
-| `handover.css` | Print stylesheet: pages, header and footer, every block |
+| `render.mjs` | `renderHandover(data, options)` → HTML: cover, tabs and field types, Last Answer, closing page |
+| `handover.css` | Print stylesheet: pages, header and footer, every block and field type |
 | `i18n.mjs` | Fixed labels, English and German |
-| `samples/variants.mjs` | Example data for the six variants |
+| `samples/variants.mjs` | Example data for every variant |
 | `build.mjs` | Writes `examples/` (and the PDFs with `--pdf`) |
 | `assets/` | Logo and the example photos (taken from the PDFs) |
 | `fonts/` | Montserrat (OFL); the slot for ABC Favorit Expanded |
