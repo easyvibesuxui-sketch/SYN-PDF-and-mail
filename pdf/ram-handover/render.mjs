@@ -240,8 +240,8 @@ function group(t, f, ctx) {
       const condition =
         typeof q.condition === 'boolean'
           ? q.condition
-            ? `<span class="ho-yes">${esc(t('yes'))}</span>`
-            : `<span class="ho-no">${esc(t('no'))}</span>`
+            ? `<span class="ho-yes">${esc(t('okay'))}</span>`
+            : `<span class="ho-no">${esc(t('notOkay'))}</span>`
           : '';
       return `<div class="ho-q">
             <div class="ho-q__main">

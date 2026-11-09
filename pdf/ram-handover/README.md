@@ -72,7 +72,7 @@ previous values in the same keys.
 Yes / No follows the app. **Yes** asks *Condition is OKAY* and takes additional information and photos,
 **No** takes additional information and photos. **Not relevant** is a third button only for questions of a
 group. In the checklist the *Complete* column shows the tick, cross or "Not relevant", and every question
-answers *Condition/function OK?* (Yes or No).
+answers *Condition/function OK?* with Okay or Not okay.
 
 Simple fields of a tab are printed as bands, every second one filled (Cultured); groups and galleries stand
 on their own.
