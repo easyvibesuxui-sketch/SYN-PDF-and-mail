@@ -221,8 +221,7 @@
         {
           "type": "yesno",
           "label": "Scheinwerfer",
-          "answer": "yes",
-          "condition": true
+          "answer": "yes"
         },
         {
           "type": "yesno",

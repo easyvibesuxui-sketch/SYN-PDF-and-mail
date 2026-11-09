@@ -44,7 +44,6 @@
           "type": "yesno",
           "label": "Problem an der Hydraulikleitung",
           "answer": "yes",
-          "condition": true,
           "comment": "Ein Schaden bedeutet immer den Ausfall oder die Beeinträchtigung einer Maschine oder technischen Anlage. Maschinenschäden haben viele Formen und wirken sich oft stark auf die Effizienz aus.",
           "photos": [
             {
@@ -56,7 +55,6 @@
           ],
           "lastAnswer": {
             "answer": "yes",
-            "condition": true,
             "comment": "Ein Schaden bedeutet immer den Ausfall oder die Beeinträchtigung einer Maschine oder technischen Anlage. Maschinenschäden haben viele Formen und wirken sich oft stark auf die Effizienz aus.",
             "photos": [
               {
@@ -74,8 +72,7 @@
           "answer": "no",
           "comment": "Ein Schaden bedeutet immer den Ausfall oder die Beeinträchtigung einer Maschine oder technischen Anlage. Maschinenschäden haben viele Formen und wirken sich oft stark auf die Effizienz aus.",
           "lastAnswer": {
-            "answer": "yes",
-            "condition": false
+            "answer": "yes"
           }
         },
         {

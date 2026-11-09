@@ -44,7 +44,6 @@
           "type": "yesno",
           "label": "Hydraulic pipe problem",
           "answer": "yes",
-          "condition": true,
           "comment": "The damage always indicates the failure or impairment of a machine or technical system. Machine damage can take many forms and often has a significant impact on efficiency.",
           "photos": [
             {
@@ -56,7 +55,6 @@
           ],
           "lastAnswer": {
             "answer": "yes",
-            "condition": true,
             "comment": "The damage always indicates the failure or impairment of a machine or technical system. Machine damage can take many forms and often has a significant impact on efficiency.",
             "photos": [
               {
@@ -74,8 +72,7 @@
           "answer": "no",
           "comment": "The damage always indicates the failure or impairment of a machine or technical system. Machine damage can take many forms and often has a significant impact on efficiency.",
           "lastAnswer": {
-            "answer": "yes",
-            "condition": false
+            "answer": "yes"
           }
         },
         {

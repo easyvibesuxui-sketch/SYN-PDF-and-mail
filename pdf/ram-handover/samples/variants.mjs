@@ -330,10 +330,10 @@ function tabs(x, { compare = false } = {}) {
     {
       title: x.tabs.lights,
       fields: [
-        was({ type: 'yesno', label: x.headlights, answer: 'yes', condition: true }),
+        was({ type: 'yesno', label: x.headlights, answer: 'yes' }),
         was(
           { type: 'yesno', label: x.cabinLights, answer: 'no', photos: [ph('cabin-lights-1'), ph('cabin-lights-2')] },
-          { answer: 'yes', condition: true, photos: [ph('cabin-lights-1')] },
+          { answer: 'yes', photos: [ph('cabin-lights-1')] },
         ),
       ],
     },
@@ -377,10 +377,10 @@ function showcase(x) {
         la({ type: 'date', label: x.fDate, value: '01.01.2028' }, { value: '01.01.2027' }),
         la({ type: 'time', label: x.fTime, value: '14:42' }, { value: '09:15' }),
         la(
-          { type: 'yesno', label: x.fYes, answer: 'yes', condition: true, comment: x.damage, photos: [ph('attachment-mirror-1'), ph('attachment-mirror-2')] },
-          { answer: 'yes', condition: true, comment: x.damage, photos: [ph('attachment-mirror-1'), ph('attachment-mirror-2')] },
+          { type: 'yesno', label: x.fYes, answer: 'yes', comment: x.damage, photos: [ph('attachment-mirror-1'), ph('attachment-mirror-2')] },
+          { answer: 'yes', comment: x.damage, photos: [ph('attachment-mirror-1'), ph('attachment-mirror-2')] },
         ),
-        la({ type: 'yesno', label: x.fYes, answer: 'no', comment: x.damage }, { answer: 'yes', condition: false }),
+        la({ type: 'yesno', label: x.fYes, answer: 'no', comment: x.damage }, { answer: 'yes' }),
         la({ type: 'rating', label: x.fRating, value: { score: 3, max: 5 }, comment: x.damage }, { value: { score: 3, max: 5 }, comment: x.damage }),
         la({ type: 'range', label: x.fRange, value: { from: 10, to: 50 }, unit: '%' }, { value: { from: 10, to: 50 }, unit: '%' }),
         la({ type: 'description', label: x.fDesc, value: x.damage }, { value: x.damage }),

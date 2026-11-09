@@ -933,6 +933,11 @@ img {
   color: var(--ho-muted);
 }
 
+/* A group's Condition/function OK?: Okay in ink, Not okay grey (.ho-no) */
+.ho-ok {
+  color: var(--ho-ink);
+}
+
 .ho-info {
   margin: 5pt 0 0;
   padding-right: 60pt;

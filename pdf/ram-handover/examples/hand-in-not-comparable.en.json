@@ -333,10 +333,8 @@
           "type": "yesno",
           "label": "Headlights",
           "answer": "yes",
-          "condition": true,
           "lastAnswer": {
-            "answer": "yes",
-            "condition": true
+            "answer": "yes"
           }
         },
         {
@@ -353,7 +351,6 @@
           ],
           "lastAnswer": {
             "answer": "yes",
-            "condition": true,
             "photos": [
               {
                 "src": "../assets/photos/cabin-lights-1.jpg"

@@ -60,7 +60,7 @@ const INLINE = new Set(['text', 'number', 'count', 'date', 'time', 'dropdown', '
 
 // ---------- Values ------------------------------------------------------------------------------------
 
-function yesnoHtml(t, v, { withCondition = true } = {}) {
+function yesnoHtml(t, v, { withCondition = false } = {}) {
   if (!v || !has(v.answer)) return '';
   const map = {
     yes: [icon.yes(t('yes')), `<span class="ho-yes">${esc(t('yes'))}</span>`],
@@ -68,9 +68,9 @@ function yesnoHtml(t, v, { withCondition = true } = {}) {
     not_relevant: [icon.notRelevant(t('notRelevant')), `<span class="ho-na">${esc(t('notRelevant'))}</span>`],
   };
   const [ic, text] = map[v.answer] ?? ['', esc(v.answer)];
-  // Condition is asked only after a Yes
+  // Condition belongs to group questions only (their Last Answer); a Yes / No field has none
   const condition =
-    withCondition && v.answer === 'yes' && typeof v.condition === 'boolean'
+    withCondition && typeof v.condition === 'boolean'
       ? `<span class="ho-sub"><span class="ho-k">${esc(t('condition'))}</span><span>${esc(t(v.condition ? 'okay' : 'notOkay'))}</span></span>`
       : '';
   return `<span class="ho-yesno">${ic}${text}${condition}</span>`;
@@ -82,10 +82,10 @@ function unitValue(v, unit) {
 }
 
 // The value of a field (or of its Last Answer, which has the same shape) as inline HTML.
-function inlineValue(t, type, v) {
+function inlineValue(t, type, v, { inGroup = false } = {}) {
   switch (type) {
     case 'yesno':
-      return yesnoHtml(t, v);
+      return yesnoHtml(t, v, { withCondition: inGroup });
     case 'switch':
       return has(v.value) ? esc(v.value === true ? t('yes') : v.value === false ? t('no') : v.value) : '';
     case 'slider':
@@ -149,7 +149,7 @@ function lastAnswer(t, type, prev, { row = false } = {}) {
   }
   // One file sits on the title line like a short value; several files are listed below it
   const oneFile = (type === 'file' || type === 'video') && prev.files?.length === 1;
-  const inline = INLINE.has(type) ? inlineValue(t, type, prev) : oneFile ? files(t, type, prev.files, { compact: true }) : '';
+  const inline = INLINE.has(type) ? inlineValue(t, type, prev, { inGroup: row }) : oneFile ? files(t, type, prev.files, { compact: true }) : '';
   const block = oneFile ? '' : blockValue(t, type, prev, { compact: true });
   const comment = info(t, prev.comment);
   const thumbs = photos(prev.photos, 'ho-thumb');
@@ -240,7 +240,7 @@ function group(t, f, ctx) {
       const condition =
         typeof q.condition === 'boolean'
           ? q.condition
-            ? `<span class="ho-yes">${esc(t('okay'))}</span>`
+            ? `<span class="ho-ok">${esc(t('okay'))}</span>`
             : `<span class="ho-no">${esc(t('notOkay'))}</span>`
           : '';
       return `<div class="ho-q">

@@ -63,16 +63,15 @@ previous values in the same keys.
 | `rating` | Rating | `value: { score, max }`, `comment` | "3/5 ★", the comment under it as Additional information, like every other field |
 | `description` | Text area | `value` | Text, line breaks kept |
 | `checks` | Multi-select | `value: [ … ]` | One option per line |
-| `yesno` | Yes / No | `answer: 'yes' \| 'no'` (`'not_relevant'` only in a group), `condition` (true / false, after Yes) | Tick or cross, and "Condition Okay / Not okay" |
+| `yesno` | Yes / No | `answer: 'yes' \| 'no'`; in a group also `'not_relevant'` and `condition` (true / false) | Tick or cross; in a group the Condition column reads Okay / Not okay |
 | `image` | Image | `photos` | The photo |
 | `file`, `video` | File, 360° video | `files: [ { name, date, url } ]`, `note` | Amber links with a chevron; one file without a note sits on the band (360 views) |
 | `gallery`, `ai` | Gallery, AI | `items: [ { label, src, lastAnswer: { src } \| null } ]` | Labelled photos, 3 (gallery) or 2 (AI) per row |
 | `group` | Group | `heading`, `fields: [ … ]` (`no` per question) | The checklist: question · Complete · Condition/function OK?, a Last Answer under each question |
 
-Yes / No follows the app. **Yes** asks *Condition is OKAY* and takes additional information and photos,
-**No** takes additional information and photos. **Not relevant** is a third button only for questions of a
-group. In the checklist the *Complete* column shows the tick, cross or "Not relevant", and every question
-answers *Condition/function OK?* with Okay or Not okay.
+A Yes / No field takes additional information and photos after Yes or No; it has no Condition. Condition
+and the third button, **Not relevant**, belong to questions of a group. In the checklist the *Complete* column shows the tick, cross or "Not relevant", and every question
+answers *Condition/function OK?* with Okay (black) or Not okay (grey).
 
 Simple fields of a tab are printed as bands, every second one filled (Cultured); groups and galleries stand
 on their own.
