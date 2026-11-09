@@ -67,12 +67,13 @@ previous values in the same keys.
 | `image` | Image | `photos` | The photo |
 | `file`, `video` | File, 360° video | `files: [ { name, date, url } ]`, `note` | Amber links with a chevron; one file without a note sits on the band (360 views) |
 | `gallery`, `ai` | Gallery, AI | `items: [ { label, src, lastAnswer: { src } \| null } ]` | Labelled photos, 3 (gallery) or 2 (AI) per row |
-| `group` | Group | `heading`, `fields: [ { no, label, answer: 'yes' \| 'no' \| 'not_relevant', condition, comment, photos } ]` | The checklist: question · Complete · Condition/function OK?, a Last Answer under each question |
+| `group` | Group | `heading`, `fields: [ { no, label, answer: 'yes' \| 'no' \| 'not_relevant', condition (after Yes), comment, photos } ]` | The checklist: question · Complete · Condition/function OK?, a Last Answer under each question |
 
 **Yes / No** is one field: Yes or No, each with additional information and photos. It has no Not relevant
-and no Condition. A **group** is a checklist of questions answered Yes, No or Not relevant, each with the
-Condition add-on (Okay / Not okay), additional information and photos. In the checklist the *Complete* column shows the tick, cross or "Not relevant", and every question
-answers *Condition/function OK?* with Okay (black) or Not okay (grey).
+and no Condition. A **group** is a checklist of questions with three buttons, as in the app: **Yes** asks
+*Condition is OKAY* and takes additional information and photos, **No** takes additional information and
+photos, **Not relevant** takes nothing. In the checklist the *Complete* column shows the tick, cross or
+"Not relevant"; *Condition/function OK?* shows Okay (black) or Not okay (grey) after a Yes.
 
 Simple fields of a tab are printed as bands, every second one filled (Cultured); groups and galleries stand
 on their own.
@@ -193,7 +194,7 @@ The family is licensed for this use. Do not copy the files into projects outside
 - One date format, and the cover and header show the same date.
 - No German labels in the English report (Einsatzort, Vollständig, Raupenbagger).
 - The checklist numbers run 1.1 to 1.13 instead of repeating 1.8 and 1.9.
-- Every checklist question shows its Condition/function OK? answer.
+- Condition is printed only after a Yes (the PDF had it after Not Relevant).
 - A Hand out shows Total / Delivered; the Bulk PDF, a Hand out, had the Hand in columns.
 - Text cut off on the closing page of Bulk and Without Booking ("Max Muster-") fits.
 - The Last Answer is a card after every field, not one block at the end of the checklist.

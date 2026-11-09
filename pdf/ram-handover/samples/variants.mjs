@@ -234,22 +234,21 @@ const text = {
   },
 };
 
-// Answers of the reference checklist: [answer, condition, with additional information]. Every question
-// of a group answers Condition/function OK?
+// Answers of the reference checklist: [answer, condition (after Yes), with additional information]
 const checklist = [
   ['yes', false, true],
-  ['not_relevant', true],
-  ['no', false],
+  ['not_relevant'],
+  ['no'],
   ['yes', true],
-  ['not_relevant', true],
-  ['no', false],
-  ['not_relevant', true],
-  ['no', true],
-  ['not_relevant', true],
-  ['no', false],
-  ['not_relevant', true],
+  ['not_relevant'],
+  ['no'],
+  ['not_relevant'],
+  ['no'],
+  ['not_relevant'],
+  ['no'],
+  ['not_relevant'],
   ['yes', true, true],
-  ['not_relevant', true],
+  ['not_relevant'],
 ];
 
 // ---------- Tabs of the handover template -------------------------------------------------------------
@@ -311,7 +310,7 @@ function tabs(x, { compare = false } = {}) {
                 no: `1.${i + 1}`,
                 label: x.q[i],
                 answer,
-                condition,
+                ...(answer === 'yes' ? { condition } : {}),
                 ...(withInfo ? { comment: x.damage } : {}),
                 ...(i === 11 ? { photos: [ph('answer-cabin-light')] } : {}),
               },
@@ -401,9 +400,9 @@ function showcase(x) {
           heading: x.heading,
           fields: [
             la({ type: 'yesno', label: x.fQuestion[0], answer: 'yes', condition: true }, { answer: 'no', comment: x.damageOld }),
-            la({ type: 'yesno', label: x.fQuestion[1], answer: 'not_relevant', condition: true }, { answer: 'not_relevant' }),
+            la({ type: 'yesno', label: x.fQuestion[1], answer: 'not_relevant' }, { answer: 'not_relevant' }),
             la({ type: 'yesno', label: x.fQuestion[2], answer: 'yes', condition: false }, { answer: 'yes', condition: true }),
-            la({ type: 'yesno', label: x.fQuestion[3], answer: 'no', condition: false, comment: x.damage }, null),
+            la({ type: 'yesno', label: x.fQuestion[3], answer: 'no', comment: x.damage }, null),
           ],
         },
         {

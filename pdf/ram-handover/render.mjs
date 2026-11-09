@@ -68,9 +68,9 @@ function yesnoHtml(t, v, { withCondition = false } = {}) {
     not_relevant: [icon.notRelevant(t('notRelevant')), `<span class="ho-na">${esc(t('notRelevant'))}</span>`],
   };
   const [ic, text] = map[v.answer] ?? ['', esc(v.answer)];
-  // Condition belongs to group questions only (their Last Answer); a Yes / No field has none
+  // Condition belongs to group questions only (their Last Answer), and only after a Yes
   const condition =
-    withCondition && typeof v.condition === 'boolean'
+    withCondition && v.answer === 'yes' && typeof v.condition === 'boolean'
       ? `<span class="ho-sub"><span class="ho-k">${esc(t('condition'))}</span><span>${esc(t(v.condition ? 'okay' : 'notOkay'))}</span></span>`
       : '';
   return `<span class="ho-yesno">${ic}${text}${condition}</span>`;
@@ -151,8 +151,10 @@ function lastAnswer(t, type, prev, { row = false } = {}) {
   const oneFile = (type === 'file' || type === 'video') && prev.files?.length === 1;
   const inline = INLINE.has(type) ? inlineValue(t, type, prev, { inGroup: row }) : oneFile ? files(t, type, prev.files, { compact: true }) : '';
   const block = oneFile ? '' : blockValue(t, type, prev, { compact: true });
-  const comment = info(t, prev.comment);
-  const thumbs = photos(prev.photos, 'ho-thumb');
+  // A Not relevant answer carries nothing else
+  const bare = type === 'yesno' && prev.answer === 'not_relevant';
+  const comment = bare ? '' : info(t, prev.comment);
+  const thumbs = bare ? '' : photos(prev.photos, 'ho-thumb');
   return `<div class="ho-last${row ? ' ho-last--row' : ''}${thumbs ? ' ho-last--photos' : ''}">
       <div class="ho-last__main">
         <div class="ho-last__head">${title}${inline}</div>
@@ -236,9 +238,11 @@ function group(t, f, ctx) {
       const complete = isYesNo
         ? yesnoHtml(t, q, { withCondition: false })
         : inlineValue(t, type, q) || blockValue(t, type, q, { compact: true });
-      // Every question of a group answers Condition/function OK?
+      // As in the app: Yes asks Condition is OKAY and takes information and photos, No takes information
+      // and photos, Not relevant takes nothing
+      const nr = q.answer === 'not_relevant';
       const condition =
-        typeof q.condition === 'boolean'
+        q.answer === 'yes' && typeof q.condition === 'boolean'
           ? q.condition
             ? `<span class="ho-ok">${esc(t('okay'))}</span>`
             : `<span class="ho-no">${esc(t('notOkay'))}</span>`
@@ -249,8 +253,8 @@ function group(t, f, ctx) {
               <div class="ho-q__complete">${complete}</div>
               <div class="ho-q__condition">${condition}</div>
             </div>
-            ${info(t, q.comment)}
-            ${photos(q.photos, 'ho-thumb', 'ho-thumbs ho-q__photos')}
+            ${nr ? '' : info(t, q.comment)}
+            ${nr ? '' : photos(q.photos, 'ho-thumb', 'ho-thumbs ho-q__photos')}
             ${ctx.compare ? lastAnswer(t, type, q.lastAnswer ?? null, { row: true }) : ''}
           </div>`;
     })
