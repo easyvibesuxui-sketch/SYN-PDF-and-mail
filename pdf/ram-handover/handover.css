@@ -95,6 +95,7 @@
   /* Last Answer: one size for each part, in every field type */
   --ho-last-img-w: 64px; /* square, 64 x 64px */
   --ho-last-img-h: 64px;
+  --ho-last-title: 6pt; /* "Last Answer" */
   --ho-last-answer: 7.5pt; /* the main answer */
   --ho-last-sub: 7pt; /* the secondary answer (Condition) */
   --ho-last-text: 7pt; /* additional information */
@@ -1098,8 +1099,8 @@ img {
   flex: none;
   font-family: var(--syn-font-title);
   font-weight: 500;
-  font-size: var(--ho-last-answer); /* the same size as the answer beside it */
-  line-height: 9pt;
+  font-size: var(--ho-last-title);
+  line-height: 9pt; /* the answer's line, so both share a baseline */
   color: var(--ho-ink);
 }
 
