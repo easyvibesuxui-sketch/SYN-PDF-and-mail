@@ -1189,7 +1189,7 @@ img {
   break-before: page;
   width: var(--ho-page-w);
   min-height: calc(var(--ho-page-h) - 0.5pt);
-  padding: 62.9pt var(--ho-margin-x) 24pt;
+  padding: 62.9pt var(--ho-margin-x) 12pt;
 }
 
 .ho-closing .ho-section {
