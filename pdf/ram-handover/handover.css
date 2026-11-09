@@ -716,6 +716,19 @@ img {
   gap: var(--ho-icon-gap);
 }
 
+/* Text inside an icon row uses the row's line (the icon's height), so its capitals centre on the icon */
+.ho-yesno > *,
+.ho-link__name > *,
+.ho-field__label--icon > * {
+  line-height: inherit;
+}
+
+/* A label with an icon takes the icon's height as its line, which puts the label's capitals on the
+   icon's centre (7pt ABC Favorit in a 10pt line: capitals centred 5pt from the top). */
+.ho-field__label--icon {
+  line-height: var(--ho-icon-size);
+}
+
 .ho-icon {
   width: var(--ho-icon-size);
   height: var(--ho-icon-size);
@@ -1273,6 +1286,8 @@ img {
 }
 
 .ho-file-icon {
+  position: relative;
+  top: -0.4pt; /* the file glyph's ink sits low in its box (its PDF mark); measured on the print */
   width: calc(var(--ho-icon-size) * 18 / 22); /* the file glyph is 18 x 22 */
   height: var(--ho-icon-size);
   flex: none;

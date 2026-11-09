@@ -169,7 +169,7 @@ function fieldBand(t, f, ctx) {
     const fileIcon = file.kind === 'video' || f.type === 'video' ? icon.video : icon.pdf;
     body = `<a class="ho-link-row" href="${esc(file.url ?? '#')}"><span><span class="ho-label ho-block">${esc(f.label)}</span><span class="ho-link__name">${fileIcon}<span class="ho-link-text">${esc(file.name)}</span></span></span>${icon.next}</a>`;
   } else {
-    body = `<div class="ho-field__label ho-label">${esc(f.label)}${ic}${note}</div>
+    body = `<div class="ho-field__label ho-label${ic ? ' ho-field__label--icon' : ''}">${esc(f.label)}${ic}${note}</div>
         ${inline || ratingNote ? `<div class="ho-field__value ho-value">${inline}${ratingNote}</div>` : ''}
         ${blockValue(t, f.type, f)}`;
   }
