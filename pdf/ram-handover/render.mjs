@@ -305,12 +305,12 @@ const rule = '\n    <div class="ho-rule" role="separator"></div>\n    ';
 // ---------- Cover -------------------------------------------------------------------------------------
 
 function cover(t, d, a) {
-  const compact = has(d.constructionSite) || has(d.equipment);
   const parties = d.parties ?? [];
 
   const partyCols = parties
     .map((p) => {
-      const lines = compact ? [p.company, p.address] : [p.name, p.company];
+      // The same lines on every cover: name, company, address (each when given)
+      const lines = [p.name, p.company, p.address];
       return `<div>
           <div class="ho-parties__role">${esc(t(p.role))}</div>
           ${lines
@@ -395,7 +395,7 @@ function cover(t, d, a) {
     ? `<div class="ho-site"><div class="ho-site__label">${esc(t('constructionSite'))}</div><div class="ho-site__value">${esc(d.constructionSite)}</div></div>`
     : '';
 
-  return `<section class="ho-cover${compact ? ' ho-cover--compact' : ''}">
+  return `<section class="ho-cover">
     <div class="ho-cover__date">${esc(d.createdAt)}</div>
     <img class="ho-cover__logo" src="${a}assets/${esc(d.brand?.logo ?? 'syniotec-logo.svg')}" alt="${esc(d.brand?.name ?? 'syniotec')}">
     <h1 class="ho-cover__title">${esc(t('handoverReport'))}</h1>
@@ -410,7 +410,7 @@ function cover(t, d, a) {
     <div class="ho-cover__lower">
       ${parties.length ? `<div class="ho-parties${parties.length === 2 ? ' ho-parties--two' : ''}">${partyCols}</div>` : ''}
       ${site}
-      <div class="ho-hairline ho-cover__divider${compact ? ' ho-hairline--single' : ''}"></div>
+      <div class="ho-hairline ho-cover__divider"></div>
       ${equipment}
       ${overview}
       ${inventory}
@@ -517,8 +517,7 @@ function closing(t, d, a, tabs, ctx) {
       </div>`
     : '';
 
-  // With Last Answers the closing tabs grow; tighter spacing keeps signatures and company on one page.
-  return `<section class="ho-closing${ctx.compare && top ? ' ho-closing--compare' : ''}">
+  return `<section class="ho-closing">
     ${top}
     ${signers ? `<div class="ho-dotted${top ? '' : ' ho-dotted--first'}" role="separator"></div>` : ''}
     ${signers}

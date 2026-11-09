@@ -96,7 +96,7 @@ on their own.
 
   "parties": [ { "role": "rentalCompany" | "owner" | "transportProvider" | "customer",
                  "name": "…", "company": "…", "address": "…" } ],
-  "constructionSite": "Bremen Roadworks",   // present: compact cover (Bulk, Without booking)
+  "constructionSite": "Bremen Roadworks",   // shown on the cover when given (Bulk, Without booking)
   "overview": [ { "no": 1, "product": "…", "name": "…", "bookingDates": "…", "quantity": 1,
                   "details": { "id": "…", "category": "…", "subtitle": "…", "serialNumber": "…" } } ],
   "equipment": { "title": "…", "id": "…", "category": "…", "subtitle": "…", "serialNumber": "…" },
@@ -164,7 +164,8 @@ page number, and a table header that repeats on every page; wkhtmltopdf does not
 - Syn fonts: **ABC Favorit Expanded** for titles and labels, **Montserrat** for values (the PDFs' Myriad
   Pro). Montserrat runs wider than Myriad, so a few lines wrap differently.
 - The logo is the syniotec wordmark taken from the PDFs as vector (`assets/syniotec-logo.svg`).
-- With compare on, the closing page's spacing tightens so signatures and company details stay on one page.
+- Every report is laid out the same way: one cover (parties, then construction site, equipment and
+  overview when given), the same field types and one closing page, with or without compare.
 - Page breaks: a tab title never stays alone at the bottom of a page; it moves to the next page with the
   start of its content. Field bands, questions and rows of photos are not split; a gallery breaks between
   rows. This needs the tab body in block flow (`.ho-tab` is `flow-root`, not flex): Chromium keeps a

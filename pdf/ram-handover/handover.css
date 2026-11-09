@@ -272,7 +272,7 @@ img {
   position: relative;
   width: var(--ho-page-w);
   height: calc(var(--ho-page-h) - 0.5pt);
-  padding: 36.6pt var(--ho-margin-x) 72.5pt;
+  padding: 36.6pt var(--ho-margin-x) 40pt;
   overflow: hidden;
   break-after: page;
   display: flex;
@@ -333,21 +333,20 @@ img {
 }
 
 .ho-cover__row--contract {
-  margin-top: 77.9pt;
+  margin-top: 36pt;
 }
 
 .ho-cover__row--type {
-  margin-top: 48.5pt;
+  margin-top: 26.5pt;
 }
 
 .ho-cover__type {
   color: var(--ho-brand);
 }
 
-/* The lower block sits on the bottom margin; the space above it absorbs short content. */
+/* One cover for every report: the parties, site, equipment and overview follow the IDs */
 .ho-cover__lower {
-  margin-top: auto;
-  padding-top: 24pt;
+  padding-top: 26.6pt;
 }
 
 .ho-parties {
@@ -368,11 +367,11 @@ img {
 }
 
 .ho-parties__role {
-  margin-bottom: 11.1pt; /* 23.1pt to the first line with the gap */
+  margin-bottom: 4pt; /* 16pt to the first line with the gap */
 }
 
 .ho-cover__lower > .ho-cover__divider {
-  margin-top: 62.7pt;
+  margin-top: 30.8pt;
 }
 
 .ho-overview__title {
@@ -417,11 +416,11 @@ img {
 .ho-overview col.ho-col-dates { width: 188.5pt; }
 
 .ho-overview thead th {
-  padding-bottom: 14.6pt;
+  padding-bottom: 10pt;
 }
 
 .ho-overview__item td {
-  padding-bottom: 14.3pt;
+  padding-bottom: 11pt;
 }
 
 /* Between items: Silver hairline pair. */
@@ -483,7 +482,7 @@ img {
 }
 
 .ho-inventory .ho-table th {
-  padding-bottom: 14.5pt;
+  padding-bottom: 10pt;
 }
 
 .ho-inventory .ho-table td {
@@ -499,44 +498,8 @@ img {
   margin: 0 0 8.4pt;
 }
 
-/* Compact cover (Bulk, Without booking): everything follows the IDs, no bottom anchoring. */
-.ho-cover--compact .ho-cover__row--contract {
-  margin-top: 45.2pt;
-}
-
-.ho-cover--compact .ho-cover__row--type {
-  margin-top: 26.5pt;
-}
-
-.ho-cover--compact .ho-cover__row-label {
-  width: auto;
-  margin-right: 0.28em;
-}
-
-.ho-cover--compact .ho-cover__lower {
-  margin-top: 0;
-  padding-top: 26.6pt;
-}
-
-.ho-cover--compact .ho-parties {
-  grid-template-columns: 216.4pt 1fr;
-  font-size: 9pt;
-  line-height: 11pt;
-}
-
-.ho-cover--compact .ho-parties > div {
-  gap: 7.4pt;
-}
-
-.ho-cover--compact .ho-parties__role {
-  margin-bottom: 2.1pt; /* 9.5pt with the gap */
-  font-size: 6pt;
-  line-height: 7.5pt;
-}
-
-
 .ho-site {
-  margin: 55.3pt 0 0 2pt;
+  margin: 24pt 0 0 2pt;
   font-family: var(--syn-font-title);
   font-weight: 500;
 }
@@ -552,23 +515,6 @@ img {
   font-size: 9pt;
   line-height: 11pt;
   color: var(--ho-brand);
-}
-
-.ho-cover--compact .ho-cover__lower > .ho-cover__divider {
-  margin-top: 30.8pt;
-}
-
-.ho-cover--compact .ho-overview__title {
-  margin-top: 21.5pt;
-}
-
-.ho-cover--compact .ho-overview {
-  margin-top: 8pt;
-  border-top: 0.167pt solid var(--ho-muted);
-}
-
-.ho-cover--compact .ho-overview thead th {
-  padding-top: 14.4pt;
 }
 
 /* Equipment card on the cover (Without booking) */
@@ -1264,7 +1210,7 @@ img {
   break-before: page;
   width: var(--ho-page-w);
   min-height: calc(var(--ho-page-h) - 0.5pt);
-  padding: 62.9pt var(--ho-margin-x) 12pt;
+  padding: 44pt var(--ho-margin-x) 12pt; /* one spacing for every closing page, with or without compare */
 }
 
 .ho-closing .ho-section {
@@ -1331,34 +1277,19 @@ img {
 }
 
 .ho-closing .ho-dotted {
-  margin: 30pt 0 26pt;
+  margin: 20pt 0 18pt;
 }
 
 .ho-closing .ho-dotted--first {
   margin-top: 0;
 }
 
-.ho-closing--compare {
-  padding-top: 44pt;
-}
-
-.ho-closing--compare .ho-dotted {
-  margin: 20pt 0 18pt;
-}
-
-.ho-closing--compare .ho-signers {
-  gap: 16pt;
-}
-
-.ho-closing--compare .ho-company {
-  margin-top: 24pt;
-}
 
 /* Signatures */
 .ho-signers {
   display: flex;
   flex-direction: column;
-  gap: 26pt;
+  gap: 16pt;
 }
 
 .ho-signer {
@@ -1421,7 +1352,7 @@ img {
 /* Company block */
 .ho-company {
   break-inside: avoid;
-  margin-top: 32pt;
+  margin-top: 24pt;
   color: var(--ho-brand);
   font-size: 6pt;
   line-height: 7.2pt;
