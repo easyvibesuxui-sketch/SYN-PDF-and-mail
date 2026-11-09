@@ -163,15 +163,23 @@ page number, and a table header that repeats on every page; wkhtmltopdf does not
 - Syn colours: Candy Apple labels and type, Jet cover text, Eerie Black values, Silver Chalice for muted
   text, hairlines and the Last Answer card, Cultured bands, Amber links, Mantis and Honey in the status icons.
 - Syn fonts: **ABC Favorit Expanded** for titles and labels, **Montserrat** for values (the PDFs' Myriad
-  Pro). Montserrat runs wider, so a few lines wrap differently.
+  Pro). Montserrat runs wider than Myriad, so a few lines wrap differently.
 - The logo is the syniotec wordmark taken from the PDFs as vector (`assets/syniotec-logo.svg`).
 - With compare on, the closing page's spacing tightens so signatures and company details stay on one page.
 
-### ABC Favorit Expanded
+### ABC Favorit
 
-The face is commercial and is not in this repository. Put the licensed files in `fonts/` as
-`ABCFavoritExpanded-Book.woff2`, `-Medium.woff2` and `-Bold.woff2` (or install the family on the render
-server). Until then titles and labels fall back to Montserrat, which is how the example PDFs are printed.
+The licensed ABC Favorit files are in `fonts/` as WOFF2 (converted from the OpenType files uploaded to the Syn
+design system artifact):
+
+| File | Used for |
+| --- | --- |
+| `ABCFavoritExpanded-Medium.woff2` | Titles and labels (weight 500), Syn's title face |
+| `ABCFavoritExpanded-Regular.woff2` | Muted keys in the Bulk details strip and the operating hours (400) |
+| `ABCFavoritExtended-Bold.woff2` | Bold titles (700): Overview, inventory names, document and video links, the rating score. Expanded has no Bold; the InDesign PDFs use Extended Bold here too |
+| `ABCFavoritExtended-Regular`, `-Book`, `-Medium.woff2` | Not used by the report yet; kept with the family |
+
+The family is licensed for this use. Do not copy the files into projects outside syniotec.
 
 ### Corrected from the PDFs
 
@@ -195,4 +203,4 @@ server). Until then titles and labels fall back to Montserrat, which is how the 
 | `samples/variants.mjs` | Example data for every variant |
 | `build.mjs` | Writes `examples/` (and the PDFs with `--pdf`) |
 | `assets/` | Logo and the example photos (taken from the PDFs) |
-| `fonts/` | Montserrat (OFL); the slot for ABC Favorit Expanded |
+| `fonts/` | ABC Favorit (licensed) and Montserrat (OFL) |

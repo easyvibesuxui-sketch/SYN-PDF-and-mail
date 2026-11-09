@@ -5,31 +5,30 @@
  * Last answer). Every length is in pt, the PDF's own unit, so positions can be checked against the
  * originals 1:1. Colours and fonts are Syn's (tokens/syn.tokens.json).
  *
+ * Fonts: ABC Favorit Expanded (titles, labels) and Montserrat (values), both in fonts/.
+ *
  * Needs a Chromium print engine (Puppeteer, Playwright, Gotenberg): it uses named pages, @page margin
  * boxes for the footer and page number, and a table header that repeats on every page.
  */
 
 /* ---------- Fonts ---------------------------------------------------------------------------------- */
 
-/* ABC Favorit Expanded is Syn's title face (commercial). Drop the licensed files into fonts/ under
-   these names; until then the titles fall back to Montserrat. */
+/* ABC Favorit Expanded, Syn's title face (licensed, self-hosted in fonts/). Expanded has no Bold, so bold
+   titles use ABC Favorit Extended Bold, as the InDesign PDFs do. */
 @font-face {
   font-family: 'ABC Favorit Expanded';
   font-weight: 400;
-  src: local('ABC Favorit Expanded Book'), local('ABCFavoritExpanded-Book'),
-    url('fonts/ABCFavoritExpanded-Book.woff2') format('woff2');
+  src: url('fonts/ABCFavoritExpanded-Regular.woff2') format('woff2');
 }
 @font-face {
   font-family: 'ABC Favorit Expanded';
   font-weight: 500;
-  src: local('ABC Favorit Expanded Medium'), local('ABCFavoritExpanded-Medium'),
-    url('fonts/ABCFavoritExpanded-Medium.woff2') format('woff2');
+  src: url('fonts/ABCFavoritExpanded-Medium.woff2') format('woff2');
 }
 @font-face {
   font-family: 'ABC Favorit Expanded';
   font-weight: 700;
-  src: local('ABC Favorit Expanded Bold'), local('ABCFavoritExpanded-Bold'),
-    url('fonts/ABCFavoritExpanded-Bold.woff2') format('woff2');
+  src: url('fonts/ABCFavoritExtended-Bold.woff2') format('woff2');
 }
 
 /* Montserrat (OFL), self-hosted: latin + latin-ext covers German. */
@@ -303,7 +302,8 @@ img {
 }
 
 .ho-cover__row-label {
-  width: 109.5pt;
+  min-width: 109.5pt;
+  padding-right: 12pt;
   flex: none;
 }
 
