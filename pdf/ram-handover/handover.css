@@ -1,9 +1,13 @@
 /*
  * RAM Handover Report: A4 print stylesheet.
  *
- * Layout measured from the InDesign PDFs (Handover Protocol Hand out / Hand in / Bulk / Without Booking /
- * Last answer). Every length is in pt, the PDF's own unit, so positions can be checked against the
- * originals 1:1. Colours and fonts are Syn's (tokens/syn.tokens.json).
+ * The body pages follow the InDesign PDFs (Handover Protocol Hand out / Hand in / Bulk / Without Booking /
+ * Last answer); the cover and the closing page share one layout for every report. Every length is in
+ * pt, the PDF's own unit. Colours and fonts are Syn's (tokens/syn.tokens.json).
+ *
+ * Content of any length must stay inside the page: text wraps (overflow-wrap), photos and links wrap,
+ * the cover continues on a second page. Anything wider than the page would make Chromium shrink every
+ * page of the PDF.
  *
  * Fonts: ABC Favorit Expanded (titles, labels) and Montserrat (values), both in fonts/.
  *
@@ -81,7 +85,6 @@
   --ho-link: var(--syn-color-secondary-amber);
   --ho-fill: var(--syn-color-grey-cultured);
   --ho-ok: var(--syn-color-success-mantis);
-  --ho-fail: var(--syn-color-pending-honey);
 
   /* Page geometry (pt) */
   --ho-page-w: 595.28pt;
@@ -92,6 +95,8 @@
   --ho-icon-gap: 4px; /* between an icon and its text, everywhere */
   --ho-icon-size: 10pt; /* every icon: status, label, chevron, file, star, banner */
   --ho-icon-color: var(--ho-muted); /* utility icons are Silver Chalice */
+  --ho-photo-w: 172.8pt; /* every large photo: fields and galleries */
+  --ho-photo-h: 129.9pt;
   /* Last Answer: one size for each part, in every field type */
   --ho-last-img-w: 64px; /* square, 64 x 64px */
   --ho-last-img-h: 64px;
@@ -166,15 +171,12 @@ body {
   font-family: var(--syn-font-body);
   font-size: 8pt;
   line-height: 1.2;
+  overflow-wrap: anywhere; /* a long word, ID or file name wraps instead of widening the page */
   -webkit-font-smoothing: antialiased;
 }
 
 img {
   display: block;
-}
-
-.ho-screen-only {
-  display: none;
 }
 
 /* On screen, show the sheets as paper. */
@@ -222,15 +224,6 @@ img {
   color: var(--ho-ink);
 }
 
-.ho-small {
-  font-size: 6pt;
-  line-height: 7.2pt;
-}
-
-.ho-muted {
-  color: var(--ho-muted);
-}
-
 .ho-link-text {
   font-family: var(--syn-font-title);
   font-weight: 700;
@@ -271,12 +264,12 @@ img {
   page: cover;
   position: relative;
   width: var(--ho-page-w);
-  height: calc(var(--ho-page-h) - 0.5pt);
+  min-height: calc(var(--ho-page-h) - 0.5pt);
   padding: 36.6pt var(--ho-margin-x) 40pt;
-  overflow: hidden;
   break-after: page;
-  display: flex;
-  flex-direction: column;
+  /* A long overview continues on a second cover page, with the same top and bottom padding */
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 .ho-cover__date {
@@ -332,6 +325,10 @@ img {
   flex: none;
 }
 
+.ho-cover__row > span {
+  min-width: 0;
+}
+
 .ho-cover__row--contract {
   margin-top: 36pt;
 }
@@ -364,6 +361,7 @@ img {
   display: flex;
   flex-direction: column;
   gap: 12pt;
+  padding-right: 12pt; /* long names wrap clear of the next party */
 }
 
 .ho-parties__role {
@@ -423,6 +421,11 @@ img {
   padding-bottom: 11pt;
 }
 
+.ho-overview tr,
+.ho-inventory__block {
+  break-inside: avoid;
+}
+
 /* Between items: Silver hairline pair. */
 .ho-overview__item--ruled td {
   border-top: 1pt double var(--ho-muted);
@@ -431,10 +434,6 @@ img {
 
 .ho-overview__details td {
   padding-bottom: 10pt;
-}
-
-.ho-overview__end {
-  margin-top: 0;
 }
 
 /* Equipment details strip under an overview row (Bulk) */
@@ -453,7 +452,7 @@ img {
 
 .ho-details > span {
   flex: 1 1 0;
-  white-space: nowrap;
+  min-width: 0;
 }
 
 .ho-details .ho-k {
@@ -466,7 +465,6 @@ img {
 .ho-inventory {
   margin-top: 21.9pt;
 }
-
 
 .ho-inventory__name {
   margin-left: 0.7pt;
@@ -593,7 +591,6 @@ img {
   color: var(--ho-muted);
 }
 
-
 .ho-content {
   padding: 0 var(--ho-margin-x);
 }
@@ -617,7 +614,6 @@ img {
 .ho-section > .ho-section-title {
   margin: 0 0 9.6pt 1.5pt;
 }
-
 
 .ho-section-title,
 .ho-subtitle,
@@ -651,7 +647,6 @@ img {
   background: var(--ho-fill);
 }
 
-.ho-fields--single .ho-field,
 .ho-field--filled {
   background: var(--ho-fill);
 }
@@ -699,13 +694,14 @@ img {
 
 .ho-field__photos {
   display: flex;
+  flex-wrap: wrap;
   gap: 7.3pt;
   margin: 4.4pt 0 0;
 }
 
 .ho-photo {
-  width: 172.6pt;
-  height: 129.8pt;
+  width: var(--ho-photo-w);
+  height: var(--ho-photo-h);
   object-fit: cover;
   border-radius: var(--ho-radius);
   background: var(--ho-fill);
@@ -736,11 +732,10 @@ img {
   align-items: center;
   justify-content: space-between;
   gap: 8pt;
-  height: 16pt;
-  padding: 0 3pt 0 4pt;
+  min-height: 16pt; /* one line; a long file name wraps and the bar grows */
+  padding: 2pt 3pt 2pt 4pt;
   border-radius: var(--ho-radius);
   background: var(--syn-color-white-white);
-  white-space: nowrap;
   text-decoration: none;
 }
 
@@ -801,10 +796,6 @@ img {
   margin-bottom: 18.4pt;
 }
 
-.ho-hours__band {
-  grid-column: 1 / -1;
-}
-
 /* ---------- Checklist (Question groups) ------------------------------------------------------------- */
 
 .ho-check__head {
@@ -814,7 +805,6 @@ img {
   padding: 0 var(--ho-inset) 6pt;
   border-bottom: 0.5pt solid var(--ho-muted);
 }
-
 
 .ho-check__head .ho-label:last-child {
   text-align: center;
@@ -859,7 +849,6 @@ img {
   line-height: 9.4pt;
   font-weight: 500;
 }
-
 
 .ho-q__condition {
   display: flex;
@@ -938,7 +927,6 @@ img {
   background: var(--ho-muted);
 }
 
-
 .ho-rating {
   display: inline-flex;
   vertical-align: baseline;
@@ -957,7 +945,6 @@ img {
   margin-right: var(--ho-icon-gap);
   color: var(--ho-link);
 }
-
 
 .ho-text {
   margin-top: 0.2pt;
@@ -978,7 +965,6 @@ img {
   line-height: 10.4pt;
 }
 
-
 .ho-helper {
   margin-top: 1.2pt;
   font-size: 6pt;
@@ -988,7 +974,6 @@ img {
 
 .ho-field .ho-info {
   margin: 3pt 0 0;
-  padding-right: 60pt;
 }
 
 /* Rows that mix sizes and faces (title + value, label + note, icon + text) align on one text
@@ -1047,7 +1032,6 @@ img {
   font-weight: 700;
 }
 
-
 .ho-last .ho-text,
 .ho-last .ho-checks,
 .ho-last .ho-link-text {
@@ -1089,25 +1073,15 @@ img {
   background: var(--ho-fill);
 }
 
-/* In the checklist: 6pt text, lined up with "Additional information" */
+/* In the checklist: under the question, lined up with "Additional information" */
 .ho-last--row {
   margin: 5pt 0 0;
 }
-
 
 .ho-q__photos {
   justify-content: flex-start;
   max-width: none;
   margin: 5pt 0 0;
-}
-
-/* Under a gallery photo: thumbnail only */
-.ho-photos .ho-last {
-  margin-top: 4pt;
-}
-
-.ho-photos .ho-last--photos {
-  grid-template-columns: 1fr auto;
 }
 
 /* Template changed since the last report: no comparison */
@@ -1122,7 +1096,6 @@ img {
   background: #fffcfc;
   break-inside: avoid;
 }
-
 
 .ho-banner__title {
   font-size: 7pt;
@@ -1145,14 +1118,14 @@ img {
   display: flex;
   flex-direction: column;
   gap: 7.7pt;
-  margin-left: 4.4pt;
 }
 
-/* One row of photos; a grid does not break across pages, rows of it do */
+/* One row of photos; a grid does not break across pages, rows of it do. Three photos span the content
+   width exactly: the first on its left edge, the third on its right edge. */
 .ho-photos__row {
   display: grid;
-  grid-template-columns: repeat(3, 172.8pt);
-  column-gap: 8.3pt;
+  grid-template-columns: repeat(3, var(--ho-photo-w));
+  column-gap: calc((100% - 3 * var(--ho-photo-w)) / 2);
   break-inside: avoid;
 }
 
@@ -1164,16 +1137,11 @@ img {
   margin: 0 0 4pt; /* caption 4pt above its photo, on its left edge */
 }
 
-.ho-photos .ho-photo {
-  width: 172.8pt;
-  height: 129.9pt;
-}
-
 .ho-photos--two .ho-photos__row {
-  grid-template-columns: repeat(2, 172.8pt);
+  grid-template-columns: repeat(2, var(--ho-photo-w));
 }
 
-/* A gallery is not a band: no padding, its label on the photos' left edge */
+/* A gallery is not a band: no padding, its label and photos on the content's left edge */
 .ho-field--gallery {
   padding: 0;
   break-inside: auto;
@@ -1199,7 +1167,7 @@ img {
 }
 
 .ho-field--gallery > .ho-field__label {
-  margin: 0 0 4pt 4.4pt; /* the photos' left edge (.ho-photos) */
+  margin: 0 0 4pt;
   break-after: avoid;
 }
 
@@ -1232,6 +1200,7 @@ img {
 
 .ho-link-row > span {
   display: block;
+  min-width: 0;
 }
 
 .ho-link-row .ho-link__name {
@@ -1246,7 +1215,7 @@ img {
 }
 
 .ho-links--compact .ho-link {
-  height: auto;
+  min-height: 0;
   padding: 0;
   background: none;
   justify-content: flex-start;
@@ -1254,6 +1223,7 @@ img {
 
 .ho-link__name {
   display: inline-flex;
+  min-width: 0;
   align-items: baseline;
   gap: var(--ho-icon-gap);
   line-height: var(--ho-icon-size); /* the icon's height, so icon and text share a centre */
@@ -1284,7 +1254,6 @@ img {
   margin-top: 0;
 }
 
-
 /* Signatures */
 .ho-signers {
   display: flex;
@@ -1311,7 +1280,6 @@ img {
   font-size: 7pt;
   line-height: 8.4pt;
 }
-
 
 .ho-signer__name--strong {
   font-family: var(--syn-font-title);
@@ -1394,8 +1362,7 @@ img {
 }
 
 .ho-company__terms p {
-  margin: 3.8pt 0 0;
+  margin: 0;
   max-width: 430pt;
   line-height: 11pt;
-  margin-top: 0;
 }

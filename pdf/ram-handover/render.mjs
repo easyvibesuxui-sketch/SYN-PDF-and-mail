@@ -20,8 +20,17 @@ const esc = (v) =>
 
 const has = (v) => v !== undefined && v !== null && v !== '' && !(Array.isArray(v) && v.length === 0);
 
-// CSS string literal for @page margin boxes
-const cssString = (s) => `"${String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\A ')}"`;
+// CSS string literal for @page margin boxes. "<" is written as an escape so the text can never close
+// the <style> element it is printed in.
+const cssString = (s) =>
+  `"${String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/</g, '\\3c ').replace(/\n/g, '\\A ')}"`;
+
+// Link targets come from the report's data: only web, mail and relative links are printed as links.
+const safeUrl = (u) => {
+  const s = String(u ?? '').trim();
+  const scheme = /^([a-z][a-z0-9+.-]*):/i.exec(s)?.[1].toLowerCase();
+  return s && (!scheme || scheme === 'http' || scheme === 'https' || scheme === 'mailto') ? s : '#';
+};
 
 // ---------- Icons (Syn "Main icons") ------------------------------------------------------------------
 
@@ -42,7 +51,6 @@ const icon = {
   video: `<svg class="ho-file-icon" viewBox="0 0 18 22" aria-hidden="true"><path d="M1 1h11l5 5v15H1z" fill="none" stroke="#fe7d00" stroke-width="1.2" stroke-linejoin="round"/><path d="M12 1v5h5" fill="none" stroke="#fe7d00" stroke-width="1.2" stroke-linejoin="round"/><path d="M6.5 10.5v6l5-3z" fill="#fe7d00"/></svg>`,
 };
 
-// Field types with a one-line value: their Last Answer sits on the title line.
 // Template field type names as the app calls them, shown after the label with { showFieldTypes: true }
 // (design review only; real reports leave them out).
 const TYPE_NAMES = {
@@ -56,6 +64,7 @@ function typeTag(ctx, type) {
   return ctx.showTypes && TYPE_NAMES[type] ? ` <span class="ho-type">(${esc(TYPE_NAMES[type])})</span>` : '';
 }
 
+// Field types with a one-line value: their Last Answer sits on the title line.
 const INLINE = new Set(['text', 'number', 'count', 'date', 'time', 'dropdown', 'choice', 'switch', 'slider', 'range', 'rating', 'yesno']);
 
 // ---------- Values ------------------------------------------------------------------------------------
@@ -118,7 +127,7 @@ function blockValue(t, type, v, { compact = false } = {}) {
 function files(t, type, list, { compact }) {
   return `<div class="ho-links${compact ? ' ho-links--compact' : ''}">${list
     .map(
-      (f) => `<a class="ho-link" href="${esc(f.url ?? '#')}">
+      (f) => `<a class="ho-link" href="${esc(safeUrl(f.url))}">
           <span class="ho-link__name">${f.kind === 'video' || type === 'video' ? icon.video : icon.pdf}<span class="ho-link-text">${esc(f.name)}${has(f.date) ? `<span class="ho-gap">${esc(f.date)}</span>` : ''}</span></span>${compact ? '' : icon.next}
         </a>`,
     )
@@ -180,7 +189,7 @@ function fieldBand(t, f, ctx) {
     // 360 views: label and link on the band, chevron at the end
     const file = f.files[0];
     const fileIcon = file.kind === 'video' || f.type === 'video' ? icon.video : icon.pdf;
-    body = `<a class="ho-link-row" href="${esc(file.url ?? '#')}"><span><span class="ho-label ho-block">${esc(f.label)}${typeTag(ctx, f.type)}</span><span class="ho-link__name">${fileIcon}<span class="ho-link-text">${esc(file.name)}</span></span></span>${icon.next}</a>`;
+    body = `<a class="ho-link-row" href="${esc(safeUrl(file.url))}"><span><span class="ho-label ho-block">${esc(f.label)}${typeTag(ctx, f.type)}</span><span class="ho-link__name">${fileIcon}<span class="ho-link-text">${esc(file.name)}</span></span></span>${icon.next}</a>`;
   } else {
     body = `<div class="ho-field__label ho-label${ic ? ' ho-field__label--icon' : ''}">${esc(f.label)}${typeTag(ctx, f.type)}${ic}${note}</div>
         ${inline ? `<div class="ho-field__value ho-value">${inline}</div>` : ''}
@@ -412,7 +421,7 @@ function cover(t, d, a) {
         : ''
     }
     <div class="ho-cover__lower">
-      ${parties.length ? `<div class="ho-parties${parties.length === 2 ? ' ho-parties--two' : ''}">${partyCols}</div>` : ''}
+      ${parties.length ? `<div class="ho-parties">${partyCols}</div>` : ''}
       ${site}
       <div class="ho-hairline ho-cover__divider"></div>
       ${equipment}
@@ -520,6 +529,9 @@ function closing(t, d, a, tabs, ctx) {
         }
       </div>`
     : '';
+
+  // Nothing to close with: no empty last page
+  if (!top && !signers && !company) return '';
 
   return `<section class="ho-closing">
     ${top}

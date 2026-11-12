@@ -168,6 +168,13 @@ page number, and a table header that repeats on every page; wkhtmltopdf does not
 - The logo is the syniotec wordmark taken from the PDFs as vector (`assets/syniotec-logo.svg`).
 - Every report is laid out the same way: one cover (parties, then construction site, equipment and
   overview when given), the same field types and one closing page, with or without compare.
+- Content of any length stays on the page: long words, IDs and file names wrap, photos and links wrap
+  onto new lines, and a long overview continues on a second cover page. Nothing can be wider than
+  the page, because Chromium would then shrink every page of the PDF.
+- Galleries run from the left to the right content edge: three photos per row, the gaps between them
+  shared out evenly.
+- Only http, https, mailto and relative links are printed as links; any other link target in the data
+  becomes "#".
 - Page breaks: a tab title never stays alone at the bottom of a page; it moves to the next page with the
   start of its content. Field bands, questions and rows of photos are not split; a gallery breaks between
   rows. This needs the tab body in block flow (`.ho-tab` is `flow-root`, not flex): Chromium keeps a
